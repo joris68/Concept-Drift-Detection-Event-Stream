@@ -1,38 +1,47 @@
 from datetime import datetime
 
 # this is the class for managing the Tracemap und the timestamps correlated to that
+# everything except the Class variables and the process_new_event function will be considered strictly private.
+# in this project private function are denoted with two underscore at the beginning of the name
 
 class TraceMapHandler:
      
      #holds python lists of Events for Traces
      traceMap = dict()
 
-     # holds a tuple for every case. (timestamp first event entering the timemap, timestamp for last event of trace entering the traceMap)
+     # holds a tuple for every case. (timestamp first event entering the traceMap, timestamp for last event of trace entering the traceMap)
      timeMap = dict()
 
      # defines the "sliding window"
      traceMapSize = 10
 
-     # inserts simantaniously into thr tracemap and the timemap
+     # holds the case ID of the currently processed Event for easy access for further analysis
+     active_trace_ID = None
+
+     # inserts simantaniously into the tracemap and the timemap
+     @classmethod
      def process_new_event(cls, event) -> None:
+
+          cls.active_trace_ID = event.case
          
-          if cls.case_exists(event):   
+          if cls.__case_exists(event):   
               #insert event to existing case
               cls.traceMap[event.case].append(event)
               #update timeMap accordingly, 2. position in the tuple
               cls.timeMap[event.case][1] = datetime.now()
 
           else:
-               if cls.enough_space():
-                   cls.add_new_case(event)
+               if cls.__enough_space():
+                   cls.__add_new_case(event)
                else:
-                   cls.delete_oldest_trace()
-                   cls.add_new_case(event)
+                   cls.__delete_oldest_trace()
+                   cls.__add_new_case(event)
 
                              
 
      # finds out the oldest trace, according to the first event inserted to the TraceMap? Maybe the latest? also makes sense -> not specified in the Paper
-     def delete_oldest_trace(cls) -> None:
+     @classmethod
+     def __delete_oldest_trace(cls) -> None:
 
           #implementing linear search
           timestamp_now = datetime.now()
@@ -53,22 +62,17 @@ class TraceMapHandler:
 
                print(f"KeyError, when deleting the oldest trace in the TraceMap and the Timemap {e}")
 
-
-     def add_new_case(cls, event):
+     @classmethod
+     def __add_new_case(cls, event):
           cls.traceMap[event.case] = [event]
           cls.timeMap[event.case] = (datetime.now(), None)
 
      # boolean functions
-
-     def case_exists(cls, event) -> bool:
+     @classmethod
+     def __case_exists(cls, event) -> bool:
           return event.case  in cls.traceMap.keys()  
-
-     def enough_space(cls) -> bool:
+     @classmethod
+     def __enough_space(cls) -> bool:
           return len(cls.traceMap) <= cls.traceMapSize
 
 
-
-if __name__ == "__main__":
-
-     my_traceMap = TraceMapHandler.create_Trace_Map()
-     print(my_traceMap)
