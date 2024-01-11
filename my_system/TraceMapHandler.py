@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 # this is the class for managing the Tracemap und the timestamps correlated to that
 # everything except the Class variables and the process_new_event function will be considered strictly private.
 # in this project private function are denoted with two underscore at the beginning of the name

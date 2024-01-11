@@ -18,6 +18,10 @@ class TraceMapHandlerBEvent:
      # holds the case ID of the currently processed Event for easy access for further analysis
      active_trace_ID = None
 
+     # hier noch eine directly follows relationship map
+     directly_follows_relations = set()
+
+
      # inserts simantaniously into the tracemap and the timemap
      @classmethod
      def process_new_event(cls, event) -> None:
@@ -36,6 +40,8 @@ class TraceMapHandlerBEvent:
                else:
                    cls.__delete_oldest_trace()
                    cls.__add_new_case(event)
+          # manage the DF relations regardlessly
+          cls.__manage_df_relations__()
 
                              
 
@@ -67,6 +73,23 @@ class TraceMapHandlerBEvent:
      def __add_new_case(cls, event):
           cls.traceMap[event.get_trace_name()] = [event]
           cls.timeMap[event.get_trace_name()] = [datetime.now(), None]
+     
+     @classmethod
+     def __manage_df_relations__(cls) -> None:
+          # takes active trace and checks for a new directly follows relations
+          a_trace = cls.traceMap[cls.active_trace_ID]
+          length = len(a_trace)
+          if length == 1:
+               pass
+          else:
+               # the the penultimate and ulitmate  Element from the trace (in this order!!) and check the directly_follows set if it
+               #contains this relationship (penultimate, ultimate)
+               new_tuple = (a_trace[-2], a_trace[-1])
+
+               if new_tuple in cls.directly_follows_relations: 
+                    pass
+               else:
+                    cls.directly_follows_relations.add(new_tuple)
 
      # boolean functions
      @classmethod
