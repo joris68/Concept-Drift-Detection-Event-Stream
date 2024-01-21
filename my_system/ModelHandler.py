@@ -1,4 +1,4 @@
-from TraceMapHandlerBEvent import TraceMapHandlerBEvent
+from playGround.TraceMapHandlerBEvent import TraceMapHandlerBEvent
 
 # this class should do the Model handling
 # tasks:
