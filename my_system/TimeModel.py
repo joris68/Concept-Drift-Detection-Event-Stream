@@ -1,5 +1,14 @@
 
 class TimeModel:
 
-     def __init__(self) -> None:
-          pass
+     # deviation will be in standarddeviations from the average
+     # the structure will be like this:
+     # key will be a relation tuple from the directly follows map
+     # value will be a list of lenght two : [average, std]
+     # unit of both will be seconds.
+
+
+     def __init__(self, times: dict) -> None:
+          self.timeModel = times
+
+          

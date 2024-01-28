@@ -19,6 +19,7 @@ class TraceMapHandler:
           self.active_trace_ID = None
           #manages the directly follows relations for building our time model
           self.directly_follows_relations = set()
+          self.processed_events = 0
      
 
 
@@ -41,6 +42,7 @@ class TraceMapHandler:
 
           # manage the DF relations regardlessly
           self.__manage_df_relations()
+          self.processed_events +=1
 
                              
 
