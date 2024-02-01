@@ -11,4 +11,6 @@ class TimeModel:
      def __init__(self, times: dict) -> None:
           self.timeModel = times
 
+     def __str__(self):
+        return '\n'.join([f"{key}: {value}" for key, value in self.data.items()])
           

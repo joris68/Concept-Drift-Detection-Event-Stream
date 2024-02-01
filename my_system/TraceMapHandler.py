@@ -90,7 +90,7 @@ class TraceMapHandler:
           else:
                # the the penultimate and ulitmate  Element from the trace (in this order!!) and check the directly_follows set if it
                #contains this relationship (penultimate, ultimate)
-               new_tuple = (a_trace[-2], a_trace[-1])
+               new_tuple = (a_trace[len(a_trace) -2], a_trace[len(a_trace) -1])
 
                if new_tuple in self.directly_follows_relations: 
                     pass
