@@ -9,8 +9,8 @@ class TimeModel:
 
 
      def __init__(self, times: dict) -> None:
-          self.timeModel = times
+          self.times = times
 
      def __str__(self):
-        return '\n'.join([f"{key}: {value}" for key, value in self.data.items()])
+        return '\n'.join([f"{key}: {value}" for key, value in self.times.items()])
           

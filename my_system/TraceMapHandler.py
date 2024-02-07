@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 
 
 # this is the class for managing the Tracemap und the timestamps correlated to that
@@ -27,11 +28,13 @@ class TraceMapHandler:
      def process_new_event(self, event) -> None:
 
           self.active_trace_ID = event.get_trace_name()
+          logging.info(f"Active Trace: {self.active_trace_ID} Handling the event rigth now")
          
           if self.__case_exists(event):   
               self.traceMap[event.get_trace_name()].append(event)
               #update timeMap accordingly, 2. position in the list
               self.timeMap[event.get_trace_name()][1] = datetime.now()
+              logging.info(f"Inserted new Event in already existing Trace in the Maps")
 
           else:
                if self.__enough_space():
@@ -63,6 +66,7 @@ class TraceMapHandler:
 
                del self.traceMap[case_to_be_deleted]
                del self.timeMap[case_to_be_deleted]
+               logging.info(f"Trace with Key {case_to_be_deleted} got deleted")
 
           except KeyError as e:
 
@@ -71,6 +75,7 @@ class TraceMapHandler:
      def __add_new_case(self, event):
           self.traceMap[event.get_trace_name()] = [event]
           self.timeMap[event.get_trace_name()] = [datetime.now(), None]
+          logging.info(f"New trace with traceID {event.get_trace_name()} got inserted into the Tracemap and the TimeMap")
 
      # boolean functions
  
@@ -90,12 +95,13 @@ class TraceMapHandler:
           else:
                # the the penultimate and ulitmate  Element from the trace (in this order!!) and check the directly_follows set if it
                #contains this relationship (penultimate, ultimate)
-               new_tuple = (a_trace[len(a_trace) -2], a_trace[len(a_trace) -1])
+               new_tuple = (a_trace[len(a_trace) -2].get_event_name(), a_trace[len(a_trace) -1].get_event_name())
 
                if new_tuple in self.directly_follows_relations: 
-                    pass
+                    logging.info(f"Already existing directly follows relationship")
                else:
                     self.directly_follows_relations.add(new_tuple)
+                    logging.info(f"We found a new directly follows relation {new_tuple} and added it to the Set")
 
 
 
