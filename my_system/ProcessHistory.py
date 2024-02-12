@@ -48,10 +48,11 @@ class ProcessHistory:
                     logging.info("Initial timemodel was mined")
                     self.processHistory.append(initial_timemodel)
                     self.modelHandler.active_time_model = self.processHistory[-1]
-                    logging.info("Initial timemodel was appended to the history")
+                    logging.info("Initial timemodel was appended to the history, and is now active")
                
      
      #TODO : Implementation
+     # 
      def concept_drift_distinction(self):
           pass
 
@@ -61,7 +62,7 @@ class ProcessHistory:
 if __name__ == "__main__":
 
 
-     logging.basicConfig(filename='logs/logs_sudden.log', encoding='utf-8', level=logging.DEBUG)
+     logging.basicConfig(filename='logs/logs_gradual.log', encoding='utf-8', level=logging.DEBUG)
 
      my_trace_map_handler = TraceMapHandler(traceMapSize=40)
 
@@ -69,7 +70,7 @@ if __name__ == "__main__":
 
      my_process_history = ProcessHistory(my_model_handler, lower_boundary=200, anomaly_treshhold=0.6 )
                
-     log_source("synthData/sudden_time_noise0_100_baseline.xes").pipe(
+     log_source("synthData/gradual_time_noise0_100_baseline.xes").pipe(
     
     
      ).subscribe(lambda x: my_process_history.concept_Drift_detection(x))
