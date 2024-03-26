@@ -2,14 +2,11 @@ from ModelHandler import ModelHandler
 from TraceMapHandler import TraceMapHandler
 from pybeamline.sources import log_source
 from pybeamline.filters import excludes_activity_filter
+from DriftTypes import DriftType
+from TimeModel import TimeModel
 import logging
 import pprint
-#TODO
-# I think check Trace alignment 
 
-
-# TODO Later
-# concept drift distinction comes in here
 
 class ProcessHistory:
 
@@ -50,11 +47,22 @@ class ProcessHistory:
                     self.modelHandler.active_time_model = self.processHistory[-1]
                     logging.info("Initial timemodel was appended to the history, and is now active")
                
-     
-     #TODO : Implementation
-     # 
-     def concept_drift_distinction(self):
+   
+     def concept_drift_distinction(self) -> DriftType:
+          if len(self.processHistory) <= 1:
+               #raise Error("How come we make distinctions?")
+               pass
+          
+          for model in self.processHistory:
+               pass
+          
+
+     def calculate_modelscore(timemodel : TimeModel):
+
           pass
+
+
+
 
 
 
@@ -62,15 +70,15 @@ class ProcessHistory:
 if __name__ == "__main__":
 
 
-     logging.basicConfig(filename='logs/logs_gradual.log', encoding='utf-8', level=logging.DEBUG)
+     logging.basicConfig(filename='logs/logs_incremental_500.log', encoding='utf-8', level=logging.DEBUG)
 
      my_trace_map_handler = TraceMapHandler(traceMapSize=40)
 
-     my_model_handler = ModelHandler(my_trace_map_handler, allowed_deviation=2.0, trace_Treshold=0.6, model_Treshold=0.6)
+     my_model_handler = ModelHandler(my_trace_map_handler, allowed_deviation=1.7, trace_Treshold=0.6, model_Treshold=0.7)
 
      my_process_history = ProcessHistory(my_model_handler, lower_boundary=200, anomaly_treshhold=0.6 )
                
-     log_source("synthData/gradual_time_noise0_100_baseline.xes").pipe(
+     log_source("synthData/incremental_time_noise0_100_baseline.xes").pipe(
     
     
      ).subscribe(lambda x: my_process_history.concept_Drift_detection(x))
