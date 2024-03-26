@@ -5,7 +5,7 @@ import logging
 
 # TODO
 #1. einen model score einbauen.
-#2. Check_trace_alignment umschreiben
+#2. Check_trace_alignment umschreibenseparate
 
 # Concerns:
 # gerade bei unifinished traces kann der modelscore ganz schön reinhauen. Da würde auch schon eine Relation nicht passen und schon würde der 
@@ -207,5 +207,4 @@ class ModelHandler:
           
           logging.info(f" these are the trace time spreads for the alignment:  {time_spreads}")
           return time_spreads
-
 
