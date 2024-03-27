@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+.env
+.venv
+venv
+playGround
+staticAnalysis
+tests
+logs
+Data/real-world
