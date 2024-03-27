@@ -29,15 +29,13 @@ class ModelHandler:
 
      # hier weichen wir bewusst von der Normal implementation ab. Wir brauchen hier einen anomalie threshold, wei wir das model davor nur mit den
      # nicht fitting traces gemined wird und auch nur auf den nicht fitting traces beweret wird - anders als beim originalen.
-     # deshalb führen wir den
-     def is_new_Model(self, timemodel : TimeModel, anomaly_treshhold) -> bool:
+     def calculate_model_score(self, timemodel : TimeModel,anomaly_treshhold) -> bool:
 
           #logging.info(f"determining if it is a new model with : {timemodel}")
           # 1. get all fitting traces für dieses Model
           # 2. all fitting traces für dieses Model / traceMap.size >= anomlythreshold
           # wenn True -> wir haben neues Model gefunden, und es wird ausgetauscht
           #wenn false -> wir haben kein neues Model gefunden und schmeißen es weg.
-
           all_trace_ids = self.dataStructures.traceMap.keys()
           fitting_traces = []
 
@@ -52,7 +50,6 @@ class ModelHandler:
      # there are two situations where we have to mine a model
      # 1. we found a trace non-fitting, we will use only unfitting traces of the current window
      # 2. there is no process model, yet so we have to define to define the first
-               # hier vielleicht mir vorlaufzeit, also erst nachdem 100 events geprocessed wurden dann wird das erste TimeModel minen
           
      def mine_new_model(self, trace_ids = None) -> TimeModel:   
           calc_dic = self.__set_to_dict()

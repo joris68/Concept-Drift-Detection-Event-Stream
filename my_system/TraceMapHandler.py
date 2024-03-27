@@ -2,11 +2,11 @@ from datetime import datetime
 import logging
 
 
-# this is the class for managing the Tracemap und the timestamps correlated to that
-# everything except the Class variables and the process_new_event function will be considered strictly private.
-# in this project private function are denoted with two underscore at the beginning of the name
-
 class TraceMapHandler:
+     '''
+     This is the class for managing the Tracemap und the timestamps correlated to that. It performs the windowing mechanism of the string.
+     It also monitors the the directly-follows relations in the process.
+     '''
 
 
      def __init__(self, traceMapSize) -> None:
@@ -28,13 +28,13 @@ class TraceMapHandler:
      def process_new_event(self, event) -> None:
 
           self.active_trace_ID = event.get_trace_name()
-          logging.info(f"Active Trace: {self.active_trace_ID} Handling the event rigth now")
+          #logging.info(f"Active Trace: {self.active_trace_ID} Handling the event rigth now")
          
           if self.__case_exists(event):   
               self.traceMap[event.get_trace_name()].append(event)
               #update timeMap accordingly, 2. position in the list
               self.timeMap[event.get_trace_name()][1] = datetime.now()
-              logging.info(f"Inserted new Event in already existing Trace in the Maps")
+              #ogging.info(f"Inserted new Event in already existing Trace in the Maps")
 
           else:
                if self.__enough_space():
@@ -46,6 +46,7 @@ class TraceMapHandler:
           # manage the DF relations regardlessly
           self.__manage_df_relations()
           self.processed_events +=1
+          logging.info("Processes event accordingly")
 
                              
 
@@ -66,7 +67,7 @@ class TraceMapHandler:
 
                del self.traceMap[case_to_be_deleted]
                del self.timeMap[case_to_be_deleted]
-               logging.info(f"Trace with Key {case_to_be_deleted} got deleted")
+               #logging.info(f"Trace with Key {case_to_be_deleted} got deleted")
 
           except KeyError as e:
 
@@ -75,7 +76,7 @@ class TraceMapHandler:
      def __add_new_case(self, event):
           self.traceMap[event.get_trace_name()] = [event]
           self.timeMap[event.get_trace_name()] = [datetime.now(), None]
-          logging.info(f"New trace with traceID {event.get_trace_name()} got inserted into the Tracemap and the TimeMap")
+          #logging.info(f"New trace with traceID {event.get_trace_name()} got inserted into the Tracemap and the TimeMap")
 
      # boolean functions
  
@@ -98,10 +99,11 @@ class TraceMapHandler:
                new_tuple = (a_trace[len(a_trace) -2].get_event_name(), a_trace[len(a_trace) -1].get_event_name())
 
                if new_tuple in self.directly_follows_relations: 
-                    logging.info(f"Already existing directly follows relationship")
+                    pass
+                    #logging.info(f"Already existing directly follows relationship")
                else:
                     self.directly_follows_relations.add(new_tuple)
-                    logging.info(f"We found a new directly follows relation {new_tuple} and added it to the Set")
+                    #logging.info(f"We found a new directly follows relation {new_tuple} and added it to the Set")
 
 
 

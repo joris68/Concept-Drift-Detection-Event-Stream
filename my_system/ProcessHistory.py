@@ -6,7 +6,10 @@ from DriftTypes import DriftType
 from TimeModel import TimeModel
 import logging
 import pprint
+import math
+import statistics
 
+#TODO: entweder modelthreshold oder anomaly threshold rausnehmen
 
 class ProcessHistory:
 
@@ -32,10 +35,11 @@ class ProcessHistory:
 
                     potential_new_model = self.modelHandler.mine_new_model(self.modelHandler.get_nonfitting_traces_from_traceMap())
 
-                    if self.modelHandler.is_new_Model(potential_new_model, self.anomaly_treshhold):
+                    if self.modelHandler.calculate_model_score(potential_new_model, self.anomaly_treshhold):
                          self.processHistory.append(potential_new_model)
                          self.modelHandler.active_time_model = self.processHistory[-1]
                          logging.info("new Model got appended to the process History, and is now active.")
+
 
           elif len(self.processHistory) == 0:
 
@@ -47,23 +51,35 @@ class ProcessHistory:
                     self.modelHandler.active_time_model = self.processHistory[-1]
                     logging.info("Initial timemodel was appended to the history, and is now active")
                
-   
+     
+
      def concept_drift_distinction(self) -> DriftType:
           if len(self.processHistory) <= 1:
-               #raise Error("How come we make distinctions?")
-               pass
+               raise Exception("How come we make distinctions?")
           
-          for model in self.processHistory:
-               pass
+          
+          
           
 
-     def calculate_modelscore(timemodel : TimeModel):
 
-          pass
+     
+     def calculate_cohens(timemodel1: TimeModel, timemodel2: TimeModel):
+          ds = []
+          #assuming same lenght
+          for rel, values in timemodel1.items():
+               av1 = values[0]
+               av2 = timemodel2[rel][0]
+               std1 = values[1]
+               std2 = timemodel2[rel][1]
 
+               oben = av1 + av2
+               #unten=  math.sqrt(((tracemap_size - 1) * std1**2 + (tracemap_size - 1) * std2**2) / (2 * tracemap_size - 2))
+               unten=  math.sqrt(((23) * std1**2 + (23) * std2**2) / (44))
 
-
-
+               ds.append(oben / unten)
+          
+          # distinct between the effect sizee
+          return statistics.mean(ds)
 
 
 
@@ -78,7 +94,7 @@ if __name__ == "__main__":
 
      my_process_history = ProcessHistory(my_model_handler, lower_boundary=200, anomaly_treshhold=0.6 )
                
-     log_source("synthData/incremental_time_noise0_100_baseline.xes").pipe(
+     log_source("Data/incremental_time_noise0_100_baseline.xes").pipe(
     
     
      ).subscribe(lambda x: my_process_history.concept_Drift_detection(x))
