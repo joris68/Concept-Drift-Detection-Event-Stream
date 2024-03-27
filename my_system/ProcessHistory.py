@@ -29,11 +29,11 @@ class ProcessHistory:
                isAlining = self.modelHandler.check_trace_alignment(self.modelHandler.dataStructures.active_trace_ID, self.modelHandler.active_time_model)
                logging.info(f"active trace will be conformanced checked : {isAlining}")
                if not isAlining:
-
-                    potential_new_model = self.modelHandler.mine_new_model(self.modelHandler.get_nonfitting_traces_from_traceMap())
-
-                    if self.modelHandler.is_new_Model(potential_new_model, self.anomaly_treshhold):
-                         self.processHistory.append(potential_new_model)
+                    
+                    non_fitting = self.modelHandler.get_nonfitting_traces_from_traceMap()
+                    if (len(non_fitting) / len(self.modelHandler.dataStructures.traceMap.keys()))  >= self.anomaly_treshhold:
+                         new_model = self.modelHandler.mine_new_model()
+                         self.processHistory.append(new_model)
                          self.modelHandler.active_time_model = self.processHistory[-1]
                          logging.info("new Model got appended to the process History, and is now active.")
 
@@ -70,15 +70,15 @@ class ProcessHistory:
 if __name__ == "__main__":
 
 
-     logging.basicConfig(filename='logs/logs_incremental_500.log', encoding='utf-8', level=logging.DEBUG)
+     logging.basicConfig(filename='logs/logs_gradual.log', encoding='utf-8', level=logging.DEBUG)
 
      my_trace_map_handler = TraceMapHandler(traceMapSize=40)
 
      my_model_handler = ModelHandler(my_trace_map_handler, allowed_deviation=1.7, trace_Treshold=0.6, model_Treshold=0.7)
 
-     my_process_history = ProcessHistory(my_model_handler, lower_boundary=200, anomaly_treshhold=0.6 )
+     my_process_history = ProcessHistory(my_model_handler, lower_boundary=200, anomaly_treshhold=0.4 )
                
-     log_source("synthData/incremental_time_noise0_100_baseline.xes").pipe(
+     log_source("synthData/sudden_time_noise0_100_baseline.xes").pipe(
     
     
      ).subscribe(lambda x: my_process_history.concept_Drift_detection(x))
