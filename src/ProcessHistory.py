@@ -12,13 +12,18 @@ import statistics
 #TODO: entweder modelthreshold oder anomaly threshold rausnehmen
 
 class ProcessHistory:
+     '''
+     This class orchestrates ths tasks from the Modelhandler and the tracemaphandler, also it has the logic for the
+     concept drift distinction.
+     '''
 
-     def __init__(self, modelHandler : ModelHandler, lower_boundary : int, anomaly_treshhold) -> None:
+     def __init__(self, modelHandler : ModelHandler, lower_boundary : int, anomaly_treshhold : float, cohens_boundary) -> None:
           self.modelHandler = modelHandler
           self.processHistory = []
           self.events_lower_boundary = lower_boundary
           #brauch ich das wirklich hier?
           self.anomaly_treshhold = anomaly_treshhold
+          self.cohens_boundary = cohens_boundary
 
           
 
@@ -39,6 +44,7 @@ class ProcessHistory:
                          self.processHistory.append(potential_new_model)
                          self.modelHandler.active_time_model = self.processHistory[-1]
                          logging.info("new Model got appended to the process History, and is now active.")
+                         self.concept_drift_distinction()
 
 
           elif len(self.processHistory) == 0:
@@ -50,6 +56,7 @@ class ProcessHistory:
                     self.processHistory.append(initial_timemodel)
                     self.modelHandler.active_time_model = self.processHistory[-1]
                     logging.info("Initial timemodel was appended to the history, and is now active")
+                    print("We have found the initial ")
                
      
 
@@ -57,20 +64,30 @@ class ProcessHistory:
           if len(self.processHistory) <= 1:
                raise Exception("How come we make distinctions?")
           
-          
-          
-          
+          if len(self.processHistory) == 2:
+               # just calculate the cohens d ==> possible outcomes: incremental and sudden drift
+               score = self.calculate_cohens(self.processHistory[-2], self.processHistory[-1])
+               type = self.categorize_cohens(score)
+               print("This is concept was detected: " +  str(type))
 
 
-     
-     def calculate_cohens(timemodel1: TimeModel, timemodel2: TimeModel):
+          
+     def categorize_cohens(self, cohens_score):
+          if cohens_score >= self.cohens_boundary:
+               return DriftType.VALUE3 # incremental
+          else:
+               return DriftType.VALUE1 # sudden
+
+          
+
+     def calculate_cohens(self, timemodel1, timemodel2):
           ds = []
           #assuming same lenght
-          for rel, values in timemodel1.items():
+          for rel, values in timemodel1.times.items():
                av1 = values[0]
-               av2 = timemodel2[rel][0]
+               av2 = timemodel2.times[rel][0]
                std1 = values[1]
-               std2 = timemodel2[rel][1]
+               std2 = timemodel2.times[rel][1]
 
                oben = av1 + av2
                #unten=  math.sqrt(((tracemap_size - 1) * std1**2 + (tracemap_size - 1) * std2**2) / (2 * tracemap_size - 2))

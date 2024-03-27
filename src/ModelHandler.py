@@ -12,6 +12,8 @@ import logging
 
 
 class ModelHandler:
+     '''This class handles the calculations based on the trace map.
+     '''
 
      def __init__(self, dataStructures :  TraceMapHandler, allowed_deviation, trace_Treshold, model_Treshold) -> None:
           self.dataStructures = dataStructures

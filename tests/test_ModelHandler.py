@@ -1,4 +1,4 @@
-from my_system.ModelHandler import ModelHandler
+from src.ModelHandler import ModelHandler
 import pytest
 
 class TestModelHandler:
