@@ -15,7 +15,7 @@ class ModelHandler:
      '''This class handles the calculations based on the trace map.
      '''
 
-     def __init__(self, dataStructures :  TraceMapHandler, allowed_deviation, trace_Treshold, model_Treshold) -> None:
+     def __init__(self, dataStructures :  TraceMapHandler, allowed_deviation, trace_Treshold) -> None:
           self.dataStructures = dataStructures
           # will be initialized with None until the first time model is derived
           self.active_time_model = None
@@ -25,7 +25,8 @@ class ModelHandler:
           self.allowed_deviation = allowed_deviation
           # we will define a treshhold if a trace fits the model, we will define if 80% of the the realtions in the 
           self.trace_Treshold = trace_Treshold
-          self.model_Treshold = model_Treshold
+          # model_treshhold ist das gleiche wie Anomaly threshold
+          #self.model_Treshold = model_Treshold
 
 
 

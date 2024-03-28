@@ -1,15 +1,12 @@
 from ModelHandler import ModelHandler
 from TraceMapHandler import TraceMapHandler
 from pybeamline.sources import log_source
-from pybeamline.filters import excludes_activity_filter
 from DriftTypes import DriftType
-from TimeModel import TimeModel
 import logging
 import pprint
 import math
 import statistics
 
-#TODO: entweder modelthreshold oder anomaly threshold rausnehmen
 
 class ProcessHistory:
      '''
@@ -17,13 +14,14 @@ class ProcessHistory:
      concept drift distinction.
      '''
 
-     def __init__(self, modelHandler : ModelHandler, lower_boundary : int, anomaly_treshhold : float, cohens_boundary) -> None:
+     def __init__(self, modelHandler : ModelHandler, lower_boundary : int, anomaly_treshhold : float, cohens_boundary, model_epsilon) -> None:
           self.modelHandler = modelHandler
           self.processHistory = []
           self.events_lower_boundary = lower_boundary
           #brauch ich das wirklich hier?
           self.anomaly_treshhold = anomaly_treshhold
           self.cohens_boundary = cohens_boundary
+          self.model_epsilon = model_epsilon
 
           
 
@@ -43,6 +41,8 @@ class ProcessHistory:
                     if self.modelHandler.calculate_model_score(potential_new_model, self.anomaly_treshhold):
                          self.processHistory.append(potential_new_model)
                          self.modelHandler.active_time_model = self.processHistory[-1]
+                         pprint.pprint(self.modelHandler.active_time_model.times)
+                         print()
                          logging.info("new Model got appended to the process History, and is now active.")
                          self.concept_drift_distinction()
 
@@ -55,10 +55,12 @@ class ProcessHistory:
                     logging.info("Initial timemodel was mined")
                     self.processHistory.append(initial_timemodel)
                     self.modelHandler.active_time_model = self.processHistory[-1]
+                    print("Initial Timemodel was found")
+                    pprint.pprint(initial_timemodel.times)
+                    print()
                     logging.info("Initial timemodel was appended to the history, and is now active")
-                    print("We have found the initial ")
+                    
                
-     
 
      def concept_drift_distinction(self) -> DriftType:
           if len(self.processHistory) <= 1:
@@ -68,18 +70,47 @@ class ProcessHistory:
                # just calculate the cohens d ==> possible outcomes: incremental and sudden drift
                score = self.calculate_cohens(self.processHistory[-2], self.processHistory[-1])
                type = self.categorize_cohens(score)
-               print("This is concept was detected: " +  str(type))
+               print(f"Detected: {str(type)} with score {str(score)}")
 
+          if len(self.processHistory) >= 3:
+               #hier müssen wir auch nach recurrig drifts checken
+               # für jedes model in der history den Modelscore berechnen und gucken ob es einen recurring drift gibt
+               # outcome kann hier sein, recurring sudden, oder recurring incremental
+               # ode einfach nur sudden oder nur incremental
+               model_scores = []
+               for model in self.processHistory:
+                    score = self.modelHandler.calculate_model_score(model, self.anomaly_treshhold)
+                    model_scores.append(score)
+               
+               # check for recurring drift
+               is_recurring = self.check_score_difference(model_scores, self.model_epsilon)
+               # calculate cohen's d between the the ultimate and penultimate timemodel
+               cohens = self.calculate_cohens(self.processHistory[-2], self.processHistory[-1])
+               change_drift = self.categorize_cohens(cohens)
 
-          
+               if is_recurring:
+                    if change_drift == DriftType.SUDDEN:
+                         print(f"Detected: {str(DriftType.SUDDEN_RECURRING)} with score {str(cohens)}")
+                    if change_drift == DriftType.INCREMENTAL:
+                         print(f"Detected: {str(DriftType.INCREMENTAL_RECURRING)} with score {str(cohens)}")
+               else:
+                    print(f"Detected: {str(change_drift)} with score {cohens}")
+
      def categorize_cohens(self, cohens_score):
           if cohens_score >= self.cohens_boundary:
-               return DriftType.VALUE3 # incremental
+               return DriftType.SUDDEN
           else:
-               return DriftType.VALUE1 # sudden
+               return DriftType.INCREMENTAL
 
+
+     def check_score_difference(self, model_scores, epsilon):
+          for i in range(len(model_scores)):
+               for j in range(i + 1, len(model_scores)):
+                    if abs(model_scores[i] - model_scores[j]) < epsilon:
+                         return True
+          return False
           
-
+     # this function takes cohen's d measurement and maps it onto the timemodel
      def calculate_cohens(self, timemodel1, timemodel2):
           ds = []
           #assuming same lenght
@@ -87,40 +118,21 @@ class ProcessHistory:
                av1 = values[0]
                av2 = timemodel2.times[rel][0]
                std1 = values[1]
+               #std kann null sein, dann müssen wir skippen
+               if std1 == 0.0:
+                    continue
                std2 = timemodel2.times[rel][1]
-
+               if std1 == 0.0:
+                    continue
                oben = av1 + av2
-               #unten=  math.sqrt(((tracemap_size - 1) * std1**2 + (tracemap_size - 1) * std2**2) / (2 * tracemap_size - 2))
-               unten=  math.sqrt(((23) * std1**2 + (23) * std2**2) / (44))
-
+               sample_size = self.modelHandler.dataStructures.traceMapSize * self.anomaly_treshhold
+               unten=  math.sqrt((sample_size * std1**2 + sample_size * std2**2) / (2*sample_size-2))
                ds.append(oben / unten)
           
-          # distinct between the effect sizee
           return statistics.mean(ds)
 
 
 
-if __name__ == "__main__":
-
-
-     logging.basicConfig(filename='logs/logs_incremental_500.log', encoding='utf-8', level=logging.DEBUG)
-
-     my_trace_map_handler = TraceMapHandler(traceMapSize=40)
-
-     my_model_handler = ModelHandler(my_trace_map_handler, allowed_deviation=1.7, trace_Treshold=0.6, model_Treshold=0.7)
-
-     my_process_history = ProcessHistory(my_model_handler, lower_boundary=200, anomaly_treshhold=0.6 )
-               
-     log_source("Data/incremental_time_noise0_100_baseline.xes").pipe(
-    
-    
-     ).subscribe(lambda x: my_process_history.concept_Drift_detection(x))
-
-     for model in my_process_history.processHistory:
-          pprint.pprint(model.times)
-          print("-------------------------------------------")
-
-     print(f"this is the length of my Processhistory {len(my_process_history.processHistory)}")
 
 
 
