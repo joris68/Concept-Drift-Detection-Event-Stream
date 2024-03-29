@@ -1,0 +1,24 @@
+name: Python Code Format Enforcement
+
+on: [push, pull_request]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.8' 
+      
+      - name: Install black
+        run: pip install black
+      
+      - name: Format code with black
+        run: black .
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'Your Name'
+          git config
