@@ -9,10 +9,15 @@ Changes - be it internal or external - affect the organization's workflows and t
 
 [1] Stertz, F., & Rinderle-Ma, S. (2018). Process histories-detecting and representing concept drifts based on event streams. In On the Move to Meaningful Internet Systems. OTM 2018 Conferences: Confederated International Conferences: CoopIS, C&TC, and ODBASE 2018, Valletta, Malta, October 22-26, 2018, Proceedings, Part I (pp. 318-335). Springer International Publishing.
 
+## Process Mining on System Logs
+The system itself logs data when processing Event streams. Every function will be a own activity in our "process" and therefore be logged as events when called. When then mine a model with the inductive miner to vizualize the different function executions and how they interact with each other. The csv data can be found in the logs folder.
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 - Docker installed on your machine. You can download Docker Desktop for Windows and Mac from [Docker Hub](https://hub.docker.com/?overlay=onboarding).
+- Python 3.x
+- pip (Python package manager)
 
 ## Installation
 
@@ -24,7 +29,7 @@ To install the project, follow these steps:
 2.  Navigate into the project directory:
      cd yourprojectname
 
-## Usage
+## Usage with Docker
 
 Here's how to run the project in a Docker container:
 
@@ -33,6 +38,16 @@ Here's how to run the project in a Docker container:
 
 2. Once the image is built, run the Docker container:
      docker run -p 4000:80 yourprojectname
+
+## Usage with Virtual Environment
+1. python -m venv venv
+
+2. venv\Scripts\activate
+
+3. pip install -r requirements.txt
+
+4. python src/Main.py
+
 
 
 ## Contributing to the Project
