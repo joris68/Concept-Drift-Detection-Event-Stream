@@ -26,7 +26,7 @@ def setup_loggers(path_detailed, path_output, type):
     detailed_logger.addHandler(detailed_handler)
 
 
-def sudden():
+def sudden_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, cohens_boundary, model_epsilon):
 
     logging.basicConfig(
         filename="logs/logs_sudden.log", encoding="utf-8", level=logging.DEBUG
@@ -53,7 +53,7 @@ def sudden():
     )
 
 
-def incremental():
+def incremental_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, cohens_boundary, model_epsilon):
 
     logging.basicConfig(
         filename="logs/logs_incremental.log", encoding="utf-8", level=logging.DEBUG
@@ -80,7 +80,7 @@ def incremental():
     )
 
 
-def recurring():
+def recurring_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, cohens_boundary, model_epsilon):
     logging.basicConfig(
         filename="logs/logs_recurring.log", encoding="utf-8", level=logging.DEBUG
     )
@@ -106,7 +106,7 @@ def recurring():
     )
 
 
-def gradual():
+def gradual_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, cohens_boundary, model_epsilon):
     logging.basicConfig(
         filename="logs/logs_gradual.log", encoding="utf-8", level=logging.DEBUG
     )
@@ -133,7 +133,10 @@ def gradual():
 
 
 if __name__ == "__main__":
-    sudden()
-    incremental()
-    recurring()
-    gradual()
+
+    
+
+    sudden_100()
+    incremental_100()
+    recurring_100()
+    gradual_100()
