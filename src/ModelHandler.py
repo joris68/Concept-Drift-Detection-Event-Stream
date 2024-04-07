@@ -49,6 +49,19 @@ class ModelHandler:
             len(fitting_traces) / len(self.dataStructures.traceMap.keys())
         ) >= anomaly_treshhold
 
+    def calculate_model_score_distinction(self, timemodel: TimeModel, anomaly_treshhold):
+        all_trace_ids = self.dataStructures.traceMap.keys()
+        fitting_traces = []
+
+        for id in all_trace_ids:
+            if self.check_trace_alignment(id, timemodel):
+                fitting_traces.append(id)
+
+        return (
+            len(fitting_traces) / len(self.dataStructures.traceMap.keys())
+        )
+
+    
     # there are two situations where we have to mine a model
     # 1. we found a trace non-fitting, we will use only unfitting traces of the current window
     # 2. there is no process model, yet so we have to define to define the first
@@ -67,12 +80,13 @@ class ModelHandler:
                     for x in range(0, z):
                         calc_dic[relation].append(trace_spreads[relation][x])
                 else:
-                    logging.info(
-                        f"would have thrown an exception because we have not found the relation"
-                    )
+                    pass
+                    #logging.info(
+                       # f"would have thrown an exception because we have not found the relation"
+                   # )
                     # raise Exception("something went terrible wrong with the directly follows relationhip in mining a new model")
 
-        logging.info(f"mining a new model: this is the calc_dic {calc_dic}")
+        #logging.info(f"mining a new model: this is the calc_dic {calc_dic}")
         return self.__calc_dic_to_TimeModel(calc_dic)
 
     # TODO fehler finden
@@ -94,7 +108,7 @@ class ModelHandler:
             timemodel_dict[r] = [avg, std]
 
         timemodel = TimeModel(timemodel_dict)
-        logging.info(f"we have found a new timemodel: {timemodel}")
+        #logging.info(f"we have found a new timemodel: {timemodel}")
         return timemodel
 
     def __set_to_dict(self) -> dict:
@@ -104,9 +118,9 @@ class ModelHandler:
             my_dict[t] = (
                 []
             )  ## assigning empty list to aggreate all calculations for a relation
-        logging.info(
+        #logging.info(
             f"got all the relations from the directly follow set into a dict : {my_dict}"
-        )
+        #)
         return my_dict
 
     # interfact to processHistory
@@ -116,12 +130,12 @@ class ModelHandler:
         for id in all_trace_ids:
             if not self.check_trace_alignment(id, self.active_time_model):
                 traces.append(id)
-        logging.info(f"got all the non-fitting traces from the {traces}")
+        #logging.info(f"got all the non-fitting traces from the {traces}")
         return traces
 
     # private auxilary function
     def __is_deviation(self, time, parameter) -> bool:
-        logging.info(f"checking for deviation of the trace")
+        #logging.info(f"checking for deviation of the trace")
         avg = parameter[0]
         std = parameter[1]
         l = self.allowed_deviation
@@ -136,7 +150,7 @@ class ModelHandler:
     # for a given Trace and a given TimeModel
     def check_trace_alignment(self, trace_id, timemodel: TimeModel) -> bool:
 
-        logging.info(f"checking trace alignment")
+        #logging.info(f"checking trace alignment")
         time_spreads = self.__calc_time_spreads(trace_id)
         self.__update_time_model(time_spreads)
         outlier_counter = 0
@@ -149,9 +163,9 @@ class ModelHandler:
                 if self.__is_deviation(time, parameter):
                     outlier_counter += 1
             z = len(time_spreads)
-            logging.info(
-                f"outlier counter for the trace : {outlier_counter} and this the time spreads length {len(time_spreads)}"
-            )
+           # logging.info(
+               # f"outlier counter for the trace : {outlier_counter} and this the time spreads length {len(time_spreads)}"
+            #)
             if z > 0:
                 kpi = outlier_counter / len(time_spreads)
             else:
@@ -174,9 +188,9 @@ class ModelHandler:
             remaining_relations = (
                 self.dataStructures.directly_follows_relations - keys_time_model
             )
-            logging.info(
-                f"remaining relation found to update the new model: {remaining_relations}"
-            )
+            #logging.info(
+                #f"remaining relation found to update the new model: {remaining_relations}"
+            #)
             if len(remaining_relations) == 0:
                 # das time model ist up to date
                 pass
@@ -190,12 +204,12 @@ class ModelHandler:
                             statistics.stdev(time_spreads[new_relation]),
                         ]
                     else:
-                        self.active_time_model[new_relation] = [
+                        self.active_time_model.times[new_relation] = [    # hier hab ich das veändert
                             statistics.mean(time_spreads[new_relation]),
                             0,
                         ]
 
-            logging.info(f"relations added to the current timemodel")
+           # logging.info(f"relations added to the current timemodel")
 
     # for a given Trace (mostly the active trace...)
     def __calc_time_spreads(self, trace_id) -> dict:
@@ -221,7 +235,7 @@ class ModelHandler:
                     time.total_seconds()
                 ]
 
-        logging.info(
-            f" these are the trace time spreads for the alignment:  {time_spreads}"
-        )
+        #logging.info(
+            #f" these are the trace time spreads for the alignment:  {time_spreads}"
+       #)
         return time_spreads

@@ -24,6 +24,9 @@ class ProcessHistory:
     ) -> None:
         self.modelHandler = modelHandler
         self.processHistory = []
+        # holds tuples (DriftType, Eventnumber)
+        self.driftHistory = [] 
+        self.historyCohens = []
         self.events_lower_boundary = lower_boundary
         # brauch ich das wirklich hier?
         self.anomaly_treshhold = anomaly_treshhold
@@ -41,7 +44,7 @@ class ProcessHistory:
                 self.modelHandler.dataStructures.active_trace_ID,
                 self.modelHandler.active_time_model,
             )
-            logging.info(f"active trace will be conformanced checked : {isAlining}")
+            #logging.info(f"active trace will be conformanced checked : {isAlining}")
             if not isAlining:
 
                 potential_new_model = self.modelHandler.mine_new_model(
@@ -55,10 +58,13 @@ class ProcessHistory:
                     self.modelHandler.active_time_model = self.processHistory[-1]
                     pprint.pprint(self.modelHandler.active_time_model.times)
                     print()
-                    logging.info(
-                        "new Model got appended to the process History, and is now active."
-                    )
-                    self.concept_drift_distinction()
+                    print(f"Appended new model for the history at this event: {self.modelHandler.dataStructures.processed_events}")
+                    #logging.info(
+                      #  "new Model got appended to the process History, and is now active."
+                    #)
+                    drift_type, cohens = self.concept_drift_distinction()
+                    self.driftHistory.append((drift_type,self.modelHandler.dataStructures.processed_events))
+                    self.historyCohens.append(cohens)
 
         elif len(self.processHistory) == 0:
 
@@ -68,17 +74,17 @@ class ProcessHistory:
             ):
                 # mine initial model
                 initial_timemodel = self.modelHandler.mine_new_model(trace_ids=None)
-                logging.info("Initial timemodel was mined")
+                #logging.info("Initial timemodel was mined")
                 self.processHistory.append(initial_timemodel)
                 self.modelHandler.active_time_model = self.processHistory[-1]
                 print("Initial Timemodel was found")
                 pprint.pprint(initial_timemodel.times)
                 print()
-                logging.info(
-                    "Initial timemodel was appended to the history, and is now active"
-                )
+                #logging.info(
+                   # "Initial timemodel was appended to the history, and is now active"
+                #)
 
-    def concept_drift_distinction(self) -> DriftType:
+    def concept_drift_distinction(self):
         if len(self.processHistory) <= 1:
             raise Exception("How come we make distinctions?")
 
@@ -89,6 +95,7 @@ class ProcessHistory:
             )
             type = self.categorize_cohens(score)
             print(f"Detected: {str(type)} with score {str(score)}")
+            return type, score
 
         if len(self.processHistory) >= 3:
             # hier müssen wir auch nach recurrig drifts checken
@@ -97,10 +104,12 @@ class ProcessHistory:
             # ode einfach nur sudden oder nur incremental
             model_scores = []
             for model in self.processHistory:
-                score = self.modelHandler.calculate_model_score(
+                score = self.modelHandler.calculate_model_score_distinction(
                     model, self.anomaly_treshhold
                 )
                 model_scores.append(score)
+            
+            print(f"these are my model scores {str(model_scores)}")
 
             # check for recurring drift
             is_recurring = self.check_score_difference(model_scores, self.model_epsilon)
@@ -115,12 +124,15 @@ class ProcessHistory:
                     print(
                         f"Detected: {str(DriftType.SUDDEN_RECURRING)} with score {str(cohens)}"
                     )
+                    return DriftType.SUDDEN_RECURRING, cohens
                 if change_drift == DriftType.INCREMENTAL:
                     print(
                         f"Detected: {str(DriftType.INCREMENTAL_RECURRING)} with score {str(cohens)}"
                     )
+                    return DriftType.INCREMENTAL_RECURRING , cohens
             else:
                 print(f"Detected: {str(change_drift)} with score {cohens}")
+                return change_drift , cohens
 
     def categorize_cohens(self, cohens_score):
         if cohens_score >= self.cohens_boundary:

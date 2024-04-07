@@ -43,7 +43,7 @@ class TraceMapHandler:
         # manage the DF relations regardlessly
         self.__manage_df_relations()
         self.processed_events += 1
-        logging.info("Processes event accordingly")
+        #logging.info("Processes event accordingly")
 
     # finds out the oldest trace, according to the first event inserted to the TraceMap? Maybe the latest? also makes sense -> not specified in the Paper
     def __delete_oldest_trace(self) -> None:

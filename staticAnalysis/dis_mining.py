@@ -2,15 +2,15 @@ import pandas as pd
 import statistics
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("ExecutionTimes/incremental.csv")
+df = pd.read_csv("staticAnalysis/ExecutionTimes/sudden_1000.csv")
 
 
 # we are going to start with the A -B execution time
 letters = ["B", "C", "M"]
 
-letters2 = ["D"]
+letters2 = ["G"]
 
-df_F = df[df['activitypair'] == 'F']
+df_F = df[df['activitypair'] == 'E']
 
 for let in letters2:
 
@@ -47,11 +47,12 @@ for let in letters2:
     #plt.title(f"F and {let}")
     plt.legend()
 
-    plt.savefig(f"metricsSudden/Band{let}.png")
+    #plt.savefig(f"metricsSudden/Band{let}.png")
 
     averages.clear()
     std.clear()
 
+    plt.show()
  
 
  
