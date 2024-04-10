@@ -1,7 +1,12 @@
 from enum import Enum
 
+
 class DriftType(Enum):
-    VALUE1 = "Sudden Drift"
-    VALUE2 = "Recurring Drift"
-    VALUE3 = "Incremental Drift"
-    VALUE4 = "Gradual Drift"
+    """These are all possible Drift Types."""
+
+    SUDDEN = "Sudden Drift"
+    RECURRING = "Recurring Drift"  # kanns den überhaut geben alleine geben?
+    INCREMENTAL = "Incremental Drift"
+    GRADUAL = "Gradual Drift"
+    SUDDEN_RECURRING = "Sudden Recurring"
+    INCREMENTAL_RECURRING = "Incremental Recurring"

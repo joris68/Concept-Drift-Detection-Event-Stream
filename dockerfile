@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 80
 
 # Run app.py when the container launches
-CMD ["python", "./my_system/Main.py"]
+CMD ["python", "./src/main_synth.py"]
