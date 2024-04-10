@@ -10,7 +10,7 @@ Changes - be it internal or external - affect the organization's workflows and t
 [1] Stertz, F., & Rinderle-Ma, S. (2018). Process histories-detecting and representing concept drifts based on event streams. In On the Move to Meaningful Internet Systems. OTM 2018 Conferences: Confederated International Conferences: CoopIS, C&TC, and ODBASE 2018, Valletta, Malta, October 22-26, 2018, Proceedings, Part I (pp. 318-335). Springer International Publishing.
 
 ## Process Mining on System Logs
-The system itself logs data when processing Event streams. Every function will be a own activity in our "process" and therefore be logged as events when called. When then mine a model with the inductive miner to vizualize the different function executions and how they interact with each other. The csv data and the output petri-net from the inductive miner can be found in the logs folder.
+The system itself logs data when processing Event streams. Every function will be a own activity in our "process" and therefore be logged as events when called. When then mine a model with the inductive miner to vizualize the different function executions and how they interact with each other. The csv data and the output petri-net from the inductive miner can be found in the logs folder in the logging branch.
 
 ## Prerequisites
 
