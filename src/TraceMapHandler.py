@@ -8,7 +8,7 @@ class TraceMapHandler:
     It also monitors the the directly-follows relations in the process.
     """
 
-    def __init__(self, traceMapSize) -> None:
+    def __init__(self, traceMapSize, logger) -> None:
         # holds python lists of Events for Traces
         self.traceMap = dict()
         # holds a list for every case. [timestamp first event entering the traceMap, timestamp for last event of trace entering the traceMap]
@@ -20,14 +20,17 @@ class TraceMapHandler:
         # manages the directly follows relations for building our time model
         self.directly_follows_relations = set()
         self.processed_events = 0
+        self.logger = logger
 
     # inserts simantaniously into the tracemap and the timemap, also manages
     def process_new_event(self, event) -> None:
+        self.logger.info(f'{self.processed_events},{self.process_new_event.__name__}, {self.__class__.__name__}')
 
         self.active_trace_ID = event.get_trace_name()
         # logging.info(f"Active Trace: {self.active_trace_ID} Handling the event rigth now")
 
         if self.__case_exists(event):
+            self.logger.info(f'{self.processed_events},__insert_event, {self.__class__.__name__}')
             self.traceMap[event.get_trace_name()].append(event)
             # update timeMap accordingly, 2. position in the list
             self.timeMap[event.get_trace_name()][1] = datetime.now()
@@ -47,6 +50,7 @@ class TraceMapHandler:
 
     # finds out the oldest trace, according to the first event inserted to the TraceMap? Maybe the latest? also makes sense -> not specified in the Paper
     def __delete_oldest_trace(self) -> None:
+        self.logger.info(f'{self.processed_events}, {self.__delete_oldest_trace.__name__}, {self.__class__.__name__}')
 
         # implementing linear search
         timestamp_now = datetime.now()
@@ -71,6 +75,7 @@ class TraceMapHandler:
             )
 
     def __add_new_case(self, event):
+        self.logger.info(f'{self.processed_events}, {self.__add_new_case.__name__}, {self.__class__.__name__}')
         self.traceMap[event.get_trace_name()] = [event]
         self.timeMap[event.get_trace_name()] = [datetime.now(), None]
         # logging.info(f"New trace with traceID {event.get_trace_name()} got inserted into the Tracemap and the TimeMap")
@@ -78,12 +83,15 @@ class TraceMapHandler:
     # boolean functions
 
     def __case_exists(self, event) -> bool:
+        self.logger.info(f'{self.processed_events}, {self.__case_exists.__name__}, {self.__class__.__name__}')
         return event.get_trace_name() in self.traceMap.keys()
 
     def __enough_space(self) -> bool:
+        self.logger.info(f'{self.processed_events}, {self.__enough_space.__name__}, {self.__class__.__name__}')
         return len(self.traceMap) <= self.traceMapSize
 
     def __manage_df_relations(self) -> None:
+        self.logger.info(f'{self.processed_events}, {self.__manage_df_relations.__name__}, {self.__class__.__name__}')
         # takes active trace and checks for a new directly follows relations
         a_trace = self.traceMap[self.active_trace_ID]
         length = len(a_trace)

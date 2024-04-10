@@ -32,6 +32,8 @@ class ModelHandler:
     # hier weichen wir bewusst von der Normal implementation ab. Wir brauchen hier einen anomalie threshold, wei wir das model davor nur mit den
     # nicht fitting traces gemined wird und auch nur auf den nicht fitting traces beweret wird - anders als beim originalen.
     def calculate_model_score(self, timemodel: TimeModel, anomaly_treshhold) -> bool:
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.calculate_model_score.__name__}, {self.__class__.__name__}')
+
 
         # logging.info(f"determining if it is a new model with : {timemodel}")
         # 1. get all fitting traces für dieses Model
@@ -50,6 +52,7 @@ class ModelHandler:
         ) >= anomaly_treshhold
 
     def calculate_model_score_distinction(self, timemodel: TimeModel, anomaly_treshhold):
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.calculate_model_score_distinction.__name__}, {self.__class__.__name__}')
         all_trace_ids = self.dataStructures.traceMap.keys()
         fitting_traces = []
 
@@ -67,6 +70,7 @@ class ModelHandler:
     # 2. there is no process model, yet so we have to define to define the first
 
     def mine_new_model(self, trace_ids=None) -> TimeModel:
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.mine_new_model.__name__}, {self.__class__.__name__}')
         calc_dic = self.__set_to_dict()
         if trace_ids is None:
             # initial model -> all traces in the tarcemap
@@ -91,6 +95,7 @@ class ModelHandler:
 
     # TODO fehler finden
     def __calc_dic_to_TimeModel(self, calc_dic: dict) -> TimeModel:
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.__calc_dic_to_TimeModel.__name__}, {self.__class__.__name__}')
 
         timemodel_dict = dict()
 
@@ -112,6 +117,7 @@ class ModelHandler:
         return timemodel
 
     def __set_to_dict(self) -> dict:
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.__set_to_dict.__name__}, {self.__class__.__name__}')
         tuple_set = self.dataStructures.directly_follows_relations
         my_dict = dict()
         for t in tuple_set:
@@ -125,6 +131,7 @@ class ModelHandler:
 
     # interfact to processHistory
     def get_nonfitting_traces_from_traceMap(self) -> list:
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.get_nonfitting_traces_from_traceMap.__name__}, {self.__class__.__name__}')
         traces = []
         all_trace_ids = list(self.dataStructures.traceMap.keys())
         for id in all_trace_ids:
@@ -135,6 +142,7 @@ class ModelHandler:
 
     # private auxilary function
     def __is_deviation(self, time, parameter) -> bool:
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.__is_deviation.__name__}, {self.__class__.__name__}')
         #logging.info(f"checking for deviation of the trace")
         avg = parameter[0]
         std = parameter[1]
@@ -149,7 +157,7 @@ class ModelHandler:
 
     # for a given Trace and a given TimeModel
     def check_trace_alignment(self, trace_id, timemodel: TimeModel) -> bool:
-
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.check_trace_alignment.__name__}, {self.__class__.__name__}')
         #logging.info(f"checking trace alignment")
         time_spreads = self.__calc_time_spreads(trace_id)
         self.__update_time_model(time_spreads)
@@ -178,7 +186,7 @@ class ModelHandler:
     # this function updates the time model if there are any unseen directly_follows relations
     # sollte das Time model hier immer mit dem neusten wert aus der unseen relation befüllt werden?
     def __update_time_model(self, time_spreads: dict) -> None:
-
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.__update_time_model.__name__}, {self.__class__.__name__}')
         if self.active_time_model is None:
             # no update necassary
             return
@@ -213,7 +221,7 @@ class ModelHandler:
 
     # for a given Trace (mostly the active trace...)
     def __calc_time_spreads(self, trace_id) -> dict:
-
+        self.dataStructures.logger.info(f'{self.dataStructures.processed_events},{self.__calc_time_spreads.__name__}, {self.__class__.__name__}')
         trace = self.dataStructures.traceMap[trace_id]
         # dictionary to return
         time_spreads = dict()

@@ -34,6 +34,7 @@ class ProcessHistory:
         self.model_epsilon = model_epsilon
 
     def concept_Drift_detection(self, event):
+        self.modelHandler.dataStructures.logger.info(f'{self.modelHandler.dataStructures.processed_events},{self.concept_Drift_detection.__name__}, {self.__class__.__name__}')
 
         self.modelHandler.dataStructures.process_new_event(event)
         # isAlining = self.modelHandler.check_trace_alignment(self.modelHandler.dataStructures.active_trace_ID, self.modelHandler.active_time_model)
@@ -85,6 +86,8 @@ class ProcessHistory:
                 #)
 
     def concept_drift_distinction(self):
+        self.modelHandler.dataStructures.logger.info(f'{self.modelHandler.dataStructures.processed_events},{self.concept_drift_distinction.__name__}, {self.__class__.__name__}')
+
         if len(self.processHistory) <= 1:
             raise Exception("How come we make distinctions?")
 
@@ -135,12 +138,16 @@ class ProcessHistory:
                 return change_drift , cohens
 
     def categorize_cohens(self, cohens_score):
+        self.modelHandler.dataStructures.logger.info(f'{self.modelHandler.dataStructures.processed_events},{self.categorize_cohens.__name__}, {self.__class__.__name__}')
+
         if cohens_score >= self.cohens_boundary:
             return DriftType.SUDDEN
         else:
             return DriftType.INCREMENTAL
 
     def check_score_difference(self, model_scores, epsilon):
+        self.modelHandler.dataStructures.logger.info(f'{self.modelHandler.dataStructures.processed_events},{self.check_score_difference.__name__}, {self.__class__.__name__}')
+
         for i in range(len(model_scores)):
             for j in range(i + 1, len(model_scores)):
                 if abs(model_scores[i] - model_scores[j]) < epsilon:
@@ -149,6 +156,8 @@ class ProcessHistory:
 
     # this function takes cohen's d measurement and maps it onto the timemodel
     def calculate_cohens(self, timemodel1, timemodel2):
+        self.modelHandler.dataStructures.logger.info(f'{self.modelHandler.dataStructures.processed_events},{self.calculate_cohens.__name__}, {self.__class__.__name__}')
+
         ds = []
         # assuming same lenght
         for rel, values in timemodel1.times.items():
