@@ -2,15 +2,15 @@ import pandas as pd
 import statistics
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("staticAnalysis/ExecutionTimes/sudden_1000.csv")
+df = pd.read_csv("staticAnalysis/ExecutionTimes/sudden.csv")
 
 
 # we are going to start with the A -B execution time
 letters = ["B", "C", "M"]
 
-letters2 = ["G"]
+letters2 = ["B"]
 
-df_F = df[df['activitypair'] == 'E']
+df_F = df[df['activitypair'] == 'H']
 
 for let in letters2:
 
@@ -42,8 +42,8 @@ for let in letters2:
     plt.errorbar(x, averages, yerr=std, color='purple', label='STD', fmt='o')
 
     # Label the axes and add a title
-    #plt.xlabel('X-axis (1 to 20)')
-    #plt.ylabel('AVG/STD')
+    plt.xlabel('number of window')
+    plt.ylabel('AVG/STD in ms')
     #plt.title(f"F and {let}")
     plt.legend()
 
