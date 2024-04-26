@@ -2,7 +2,7 @@
 import pm4py
 
 
-log = pm4py.read_xes("data\sudden_time_noise0_100_baseline.xes")
+log = pm4py.read_xes("Data\synth\sudden_time_noise0_500_baseline.xes")
 
 
 bpmn= pm4py.discover_bpmn_inductive(log)

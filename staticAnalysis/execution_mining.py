@@ -1,7 +1,7 @@
 import pandas as pd
 #import numpy as np
 
-df = pd.read_csv("Data/synth/sudden_time_noise0_1000_baseline.csv")
+df = pd.read_csv("Data/synth/recurring_time_noise0_500_baseline.csv")
 # convert startTime column to datetime object
 df['startTime'] = pd.to_datetime(df['startTime'])
 
@@ -18,7 +18,7 @@ sorted_tuples = sorted(cross_matrix, key=lambda x: (x[0], x[1]))
 # first for all cases ranging from 0 to 99 calculate the completion time to a matrix berween them
 number_range = range(0,100)
 
-filename = 'staticAnalysis/ExecutionTimes/sudden_1000.csv'
+filename = 'staticAnalysis/ExecutionTimes/sudden_500.csv'
 outfile = open(filename, 'w')
 
 outfile.write("case,activitypair,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O")

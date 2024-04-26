@@ -2,7 +2,6 @@ from ModelHandler import ModelHandler
 from TraceMapHandler import TraceMapHandler
 from pybeamline.sources import log_source
 from DriftTypes import DriftType
-import logging
 import pprint
 import math
 import statistics
@@ -27,6 +26,7 @@ class ProcessHistory:
         # holds tuples (DriftType, Eventnumber)
         self.driftHistory = [] 
         self.historyCohens = []
+        self.scoreHistory = []
         self.events_lower_boundary = lower_boundary
         # brauch ich das wirklich hier?
         self.anomaly_treshhold = anomaly_treshhold
@@ -85,6 +85,12 @@ class ProcessHistory:
                 #)
 
     def concept_drift_distinction(self):
+        # we should calculate the model_score regardlessly
+        score = self.modelHandler.calculate_model_score_distinction(
+                    self.processHistory[-1], self.anomaly_treshhold
+                )
+        self.scoreHistory.append(score)
+
         if len(self.processHistory) <= 1:
             raise Exception("How come we make distinctions?")
 
@@ -98,21 +104,18 @@ class ProcessHistory:
             return type, score
 
         if len(self.processHistory) >= 3:
-            # hier müssen wir auch nach recurrig drifts checken
-            # für jedes model in der history den Modelscore berechnen und gucken ob es einen recurring drift gibt
-            # outcome kann hier sein, recurring sudden, oder recurring incremental
-            # ode einfach nur sudden oder nur incremental
-            model_scores = []
-            for model in self.processHistory:
-                score = self.modelHandler.calculate_model_score_distinction(
-                    model, self.anomaly_treshhold
-                )
-                model_scores.append(score)
+            # we should add a score history to not 
+            #model_scores = []
+            #for model in self.processHistory:
+            #    score = self.modelHandler.calculate_model_score_distinction(
+            #        model, self.anomaly_treshhold
+            #    )
+            #    model_scores.append(score)
             
-            print(f"these are my model scores {str(model_scores)}")
+            #print(f"these are my model scores {str(model_scores)}")
 
             # check for recurring drift
-            is_recurring = self.check_score_difference(model_scores, self.model_epsilon)
+            is_recurring = self.check_score_difference(self.scoreHistory, self.model_epsilon)
             # calculate cohen's d between the the ultimate and penultimate timemodel
             cohens = self.calculate_cohens(
                 self.processHistory[-2], self.processHistory[-1]
