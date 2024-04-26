@@ -27,8 +27,8 @@ if __name__ == "__main__":
 
         dataset = "sudden_100"
 
-        trace_thresholds = [0.1, 0.2, 0.33, 0.5, 0.65, 0.8, 1.0]  
-        anomaly_thresholds = [0.1, 0.2, 0.33, 0.5, 0.65, 0.8, 1.0]
+        trace_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]  
+        anomaly_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] 
 
         for counter_1 in range(0,10):
             for trace_threshold in trace_thresholds:
