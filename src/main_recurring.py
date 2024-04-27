@@ -7,7 +7,7 @@ import csv
 
 
 
-def sudden_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, cohens_boundary, model_epsilon):
+def recurring_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, cohens_boundary, model_epsilon):
     #logging.basicConfig(filename="logs/logs_sudden.log", encoding="utf-8", level=logging.DEBUG)
     my_trace_map_handler = TraceMapHandler(traceMapSize=40)
     my_model_handler = ModelHandler(my_trace_map_handler, allowed_deviation=allowed_deviation, trace_Treshold=trace_treshold)
@@ -21,23 +21,23 @@ def sudden_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_tresho
 if __name__ == "__main__":
 
 
-    with open('ExperimentsDocker/sudden_100.csv', 'w', newline='') as file:
+    with open('ExperimentsDocker/recurring_100.csv', 'w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Experiment",  "Dataset", "Deviation", "Trace Threshold",  "Lower Boundary", "Anomaly Threshold" ,"Cohens Boundary", "Model Epsilon", "Drift Actual", "Drifts detected", "at event", "at event actual", "exe time", "cohens score"])
+        writer.writerow(["Experiment",  "Dataset", "Deviation", "Trace Threshold",  "Lower Boundary", "Anomaly Threshold" ,"Cohens Boundary", "Model Epsilon",  "Drifts detected", "at event", "exe time", "cohens score"])
 
-        dataset = "sudden_100"
+        dataset = "recurring_100"
 
-        trace_thresholds = [0.1, 0.2, 0.33, 0.5, 0.65, 0.8, 1.0]  
-        anomaly_thresholds = [0.1, 0.2, 0.33, 0.5, 0.65, 0.8, 1.0]
+        trace_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]  
+        anomaly_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] 
 
         for counter_1 in range(0,10):
             for trace_threshold in trace_thresholds:
                 for anomaly_threshold in anomaly_thresholds:
                     start_time = time.time()
                     # Execute the experiment with the current combination of thresholds
-                    PH_length, drift_history, cohens_history = sudden_100(allowed_deviation=2.0, trace_treshold=trace_threshold, lower_boundary=220, anomaly_treshold=anomaly_threshold, cohens_boundary=13, model_epsilon=0.2)
+                    PH_length, drift_history, cohens_history = recurring_100(allowed_deviation=2.0, trace_treshold=trace_threshold, lower_boundary=220, anomaly_treshold=anomaly_threshold, cohens_boundary=13, model_epsilon=0.2)
                     execution_time = time.time() - start_time
                     
                     for x in range(min(len(drift_history), len(cohens_history))):
-                        writer.writerow([counter_1, dataset, 2.0, trace_threshold, 220, anomaly_threshold, 13, 0.2, 1, drift_history[x][0], drift_history[x][1], 0, execution_time, cohens_history[x]])
+                        writer.writerow([counter_1, dataset, 2.0, trace_threshold, 220, anomaly_threshold, 13, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])
 

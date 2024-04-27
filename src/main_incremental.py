@@ -1,10 +1,9 @@
-from src import ModelHandler
-from src import TraceMapHandler
-from src import ProcessHistory
+from ModelHandler import ModelHandler
+from TraceMapHandler import TraceMapHandler
+from ProcessHistory import ProcessHistory
 from pybeamline.sources import log_source
 import time
 import csv
-
 
 
 def incremental_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, cohens_boundary, model_epsilon):
