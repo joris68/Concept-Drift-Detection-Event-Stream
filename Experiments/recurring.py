@@ -7,16 +7,14 @@ import statistics as s
 
 
 def calc_accuracy(weglassen: bool):
-     file_path = 'ExperimentsDocker/recurring_100.csv'
+     file_path = 'New/recurring_100.csv'
      df = pd.read_csv(file_path)
      confusion_matrices = {}
 
      # every rigth drift would depend on the 
 
-     for (trace_threshold, anomaly_threshold), group in df.groupby(['Trace Threshold', 'Lower Boundary']):
+     for (experiment, trace_threshold, anomaly_threshold), group in df.groupby([ "Experiment",'Trace Threshold', 'Anomaly Threshold']):
 
-          if weglassen and trace_threshold == 0.8 and anomaly_threshold == 0.5:
-               continue
 
     
           sorted_group = group.sort_values(by='Drifts detected')
@@ -38,19 +36,45 @@ def calc_accuracy(weglassen: bool):
           # Count remaining rows as FN
           fn += len(sorted_group) - 2
      
-          confusion_matrices[(trace_threshold, anomaly_threshold)] = {'TP': tp, 'FN': fn}
+          confusion_matrices[(experiment, trace_threshold, anomaly_threshold)] = {'TP': tp, 'FN': fn}
+     
+     aggregated_data = {}
+     for key, value in confusion_matrices.items():
+        trace, anomaly = key[1], key[2]
+        ttuple= (trace, anomaly)  # The experiment identifier is the first element of the tuple
+        if ttuple not in aggregated_data:
+            aggregated_data[ttuple] = {'TP': 0, 'FN': 0}
+        aggregated_data[ttuple]['TP'] += value['TP']
+        aggregated_data[ttuple]['FN'] += value['FN']
+
+     return aggregated_data
 
 
-     total_tp = sum(cm['TP'] for cm in confusion_matrices.values())
-     total_fn = sum(cm['FN'] for cm in confusion_matrices.values())
+     #total_tp = sum(cm['TP'] for cm in confusion_matrices.values())
+     #total_fn = sum(cm['FN'] for cm in confusion_matrices.values())
 
-     print(total_tp)
-     print(total_fn)
+     #print(total_tp)
+     #print(total_fn)
 
-     accuracy = total_tp / (total_tp + total_fn)
-     print(accuracy)
+     #accuracy = total_tp / (total_tp + total_fn)
+     #print(accuracy)
 
-#calc_accuracy(weglassen=True)
+dict = calc_accuracy(weglassen=False)
+print(len(dict.items()))
+
+def to_matrix(numbers_dict):
+    accuracy_dict = {}
+
+    for key, values in numbers_dict.items():
+        if (values['TP'] + values['FN']) > 0:  
+            accuracy = values['TP'] / (values['TP'] + values['FN'])
+        else:
+            accuracy = 0 
+        accuracy_dict[key] = accuracy
+    print(accuracy_dict)
+    print(len(accuracy_dict.items()))
+
+to_matrix(dict)
 
 
 def calc_average_detection_delay(weglassen : bool):
@@ -116,6 +140,6 @@ def average_execution_time(weglassen: bool):
      std = s.stdev(exe_times)
      print(avg)
      print(std)
-average_execution_time(weglassen=True)
+#average_execution_time(weglassen=True)
 
         

@@ -164,3 +164,8 @@ maybeTrash/
 playGround/
 Data/real-world
 Outputs
+
+#terraform
+.terraform
+terraform.tfstate
+.terraform.lock.hcl

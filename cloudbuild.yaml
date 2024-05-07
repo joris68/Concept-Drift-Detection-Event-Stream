@@ -1,26 +1,26 @@
 steps:
   # Build and push the image for 'sudden'
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-f', 'dockerfile.sudden', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/thesisimages/suddenexperiments:latest', '.']
+    args: ['build', '-f', 'dockerfile.sudden', '-t', 'suddenexperiments:latest', '.']
     id: 'Build Sudden'
 
   # Build and push the image for 'gradual'
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-f', 'dockerfile.gradual', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/thesisimages/gradualexperiments:latest', '.']
+    args: ['build', '-f', 'dockerfile.gradual', '-t', 'gradualexperiments:latest', '.']
     id: 'Build Gradual'
 
   # Build and push the image for 'incremental'
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-f', 'dockerfile.incremental', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/thesisimages/incrementalexperiments:latest', '.']
+    args: ['build', '-f', 'dockerfile.incremental', '-t', 'incrementalexperiments:latest', '.']
     id: 'Build Incremental'
 
   # Build and push the image for 'recurring'
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-f', 'dockerfile.recurring', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/thesisimages/recurringexperiments:latest', '.']
+    args: ['build', '-f', 'dockerfile.recurring', '-t', 'recurringexperiments:latest', '.']
     id: 'Build Recurring'
 
 images:
-  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/thesisimages/gradualexperiments:latest'
-  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/thesisimages/suddenexperiments:latest'
-  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/thesisimages/incrementalexperiments:latest'
-  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/thesisimages/recurringexperiments:latest'
+  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/gradualexperiments:latest'
+  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/suddenexperiments:latest'
+  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/incrementalexperiments:latest'
+  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/recurringexperiments:latest'

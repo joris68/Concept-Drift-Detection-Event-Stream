@@ -26,17 +26,17 @@ if __name__ == "__main__":
 
         dataset = "incremental_100"
 
-        trace_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]  
-        anomaly_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] 
+        cohens = [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26]  
+        deviations = [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2] 
 
         for counter_1 in range(0,10):
-            for trace_threshold in trace_thresholds:
-                for anomaly_threshold in anomaly_thresholds:
+            for cohen in cohens:
+                for dev in deviations:
                     start_time = time.time()
                     # Execute the experiment with the current combination of thresholds
-                    PH_length, drift_history, cohens_history = incremental_100(allowed_deviation=2.0, trace_treshold=trace_threshold, lower_boundary=220, anomaly_treshold=anomaly_threshold, cohens_boundary=13, model_epsilon=0.2)
+                    PH_length, drift_history, cohens_history = incremental_100(allowed_deviation=dev, trace_treshold=0.6, lower_boundary=220, anomaly_treshold=0.7, cohens_boundary=cohen, model_epsilon=0.2)
                     execution_time = time.time() - start_time
                     
                     for x in range(min(len(drift_history), len(cohens_history))):
-                        writer.writerow([counter_1, dataset, 2.0, trace_threshold, 220, anomaly_threshold, 13, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])
+                        writer.writerow([counter_1, dataset, dev, 0.6, 220, 0.7, cohen, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])
 

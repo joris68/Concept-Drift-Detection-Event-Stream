@@ -2,31 +2,59 @@ import pandas as pd
 import statistics as s
 # actual drift point: 540
 
+#actual drift point gradual: 540
+
 def calc_accracy(weglassen: bool):
-    file_path = 'ExperimentsDocker/sudden_100.csv'
+    file_path = 'New/gradual_100.csv'
     df = pd.read_csv(file_path)
     confusion_matrices = {}
 
-    for (trace_threshold, anomaly_threshold), group in df.groupby(['Trace Threshold', 'Lower Boundary']):
+    for (experiment, trace_threshold, anomaly_threshold), group in df.groupby(['Experiment','Trace Threshold', 'Anomaly Threshold']):
         if weglassen and trace_threshold == 0.8 and anomaly_threshold == 0.5:
                continue
         tp = group['Drifts detected'].eq('DriftType.SUDDEN').sum()
         # FN is calculated based on the provided criteria. If there's more than one row, it indicates potential FNs due to multiple entries or non-SUDDEN types.
         fn = len(group) - tp
         
-        confusion_matrices[(trace_threshold, anomaly_threshold)] = {'TP': tp, 'FN': fn}
+        confusion_matrices[(experiment, trace_threshold, anomaly_threshold)] = {'TP': tp, 'FN': fn}
 
 
-    total_tp = sum(cm['TP'] for cm in confusion_matrices.values())
-    total_fn = sum(cm['FN'] for cm in confusion_matrices.values())
 
-    print(total_tp)
-    print(total_fn)
+    #print(confusion_matrices)
+    #print(total_tp)
+    #print(total_fn)
 
-    accuracy = total_tp / (total_tp + total_fn)
-    print(accuracy)
+    #accuracy = total_tp / (total_tp + total_fn)
+    #print(accuracy)
+    # pro tripel average und dann accuracy berechenen
+    aggregated_data = {}
 
-#calc_accracy(weglassen=True)
+    # Loop through each item in the dictionary
+    for key, value in confusion_matrices.items():
+        trace, anomaly = key[1], key[2]
+        ttuple= (trace, anomaly)  # The experiment identifier is the first element of the tuple
+        if ttuple not in aggregated_data:
+            aggregated_data[ttuple] = {'TP': 0, 'FN': 0}
+        aggregated_data[ttuple]['TP'] += value['TP']
+        aggregated_data[ttuple]['FN'] += value['FN']
+
+    return aggregated_data
+    
+
+#dict = calc_accracy(weglassen=False)
+
+def to_matrix(numbers_dict):
+    accuracy_dict = {}
+
+    for key, values in numbers_dict.items():
+        if (values['TP'] + values['FN']) > 0:  
+            accuracy = values['TP'] / (values['TP'] + values['FN'])
+        else:
+            accuracy = 0 
+        accuracy_dict[key] = accuracy
+    print(accuracy_dict)
+          
+#to_matrix(dict)     
 
 def calc_average_detection_delay(weglassen: bool):
 
@@ -46,8 +74,8 @@ def calc_average_detection_delay(weglassen: bool):
     average_delay = sum(differences) / len(differences)
     return average_delay
 
-average_detection_delay = calc_average_detection_delay(weglassen=True)
-print("Average Detection Delay:", average_detection_delay)
+#average_detection_delay = calc_average_detection_delay(weglassen=True)
+#print("Average Detection Delay:", average_detection_delay)
 
 def find_largest_group():
 

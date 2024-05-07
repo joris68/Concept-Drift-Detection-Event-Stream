@@ -12,7 +12,7 @@ def recurring_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_tre
     my_trace_map_handler = TraceMapHandler(traceMapSize=40)
     my_model_handler = ModelHandler(my_trace_map_handler, allowed_deviation=allowed_deviation, trace_Treshold=trace_treshold)
     my_process_history = ProcessHistory(my_model_handler, lower_boundary=lower_boundary, anomaly_treshhold=anomaly_treshold, cohens_boundary=cohens_boundary, model_epsilon=model_epsilon)
-    log_source("Data/synth/sudden_time_noise0_100_baseline.xes").pipe().subscribe(lambda x: my_process_history.concept_Drift_detection(x))
+    log_source("Data/synth/recurring_time_noise0_100_baseline.xes").pipe().subscribe(lambda x: my_process_history.concept_Drift_detection(x))
     return len(my_process_history.processHistory), my_process_history.driftHistory, my_process_history.historyCohens 
 
 
