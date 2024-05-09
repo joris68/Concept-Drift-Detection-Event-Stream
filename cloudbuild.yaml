@@ -23,8 +23,13 @@ steps:
     args: ['build', '-f', 'dockerfile.recurring', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/recurringexperiments:latest', '.']
     id: 'Build Recurring'
 
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'dockerfile.test', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/test:latest', '.']
+    id: 'Build Test'
+
 images:
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/gradualexperiments:latest'
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/suddenexperiments:latest'
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/incrementalexperiments:latest'
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/recurringexperiments:latest'
+  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/test:latest'

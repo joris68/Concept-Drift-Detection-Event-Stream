@@ -7,3 +7,8 @@ variable "region" {
   type = string
   default = "europe-west1"
 }
+
+variable "docker_repo_name" {
+  type = string
+  default = "mythesisimages"
+}
