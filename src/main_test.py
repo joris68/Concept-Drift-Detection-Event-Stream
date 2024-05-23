@@ -2,7 +2,7 @@ from google.cloud import storage
 
 if __name__ == "__main__":
 
-     bucket_name = "your-bucket-name"
+     bucket_name = "experiments-bucket68"
      file_name = "example.txt"
      content = "Hello, World!"
 

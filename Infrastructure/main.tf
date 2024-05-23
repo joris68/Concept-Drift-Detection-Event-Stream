@@ -16,21 +16,21 @@ provider "google" {
 }
 
 
-resource "google_cloudbuild_trigger" "github_trigger" {
-     provider = google
-     name = "github-trigger"
-     description = "Trigger for GitHub repo changes"
+#resource "google_cloudbuild_trigger" "github_trigger" {
+ ##    provider = google
+  #   name = "github-trigger"
+ #    description = "Trigger for GitHub repo changes"
 
-  github {
-    owner = "joris68"
-    name  = "Concept-Drift-Detection-Event-Stream"
-    push {
-      branch = "^experiments$"  // Trigger on changes to the main branch
-    }
-  }
+ # github {
+ #   owner = "joris68"
+ #   name  = "Concept-Drift-Detection-Event-Stream"
+#    push {
+#      branch = "^experiments$"  // Trigger on changes to the main branch
+#    }
+#  }
 
-  filename = "cloudbuild.yaml"  // The name of your Cloud Build config file
-}
+##  filename = "cloudbuild.yaml"  // The name of your Cloud Build config file
+#}
 
 # the service accounts for cloud build batch jobs
 resource "google_service_account" "cloud_run_sa" {
@@ -59,36 +59,121 @@ resource "google_storage_bucket" "my_bucket" {
   storage_class = "STANDARD"
 }
 
-resource "google_storage_bucket_iam_binding" "bucket_writer" {
+# the service accounts for cloud build batch jobs
+resource "google_service_account" "cloud_run_sa" {
+  account_id   = "cloud-run-batch-job-sa"
+  display_name = "Service Account for Cloud Run Batch Jobs"
+  project      = var.project_id
+}
+
+resource "google_storage_bucket_iam_member" "bucket_writer" {
   bucket = google_storage_bucket.my_bucket.name
   role   = "roles/storage.objectCreator"
 
-  members = [
-    "serviceAccount:${google_service_account.cloud_run_sa.email}"
-  ]
+  member = "serviceAccount:${google_service_account.cloud_run_sa.email}"
+  
 }
 
-resource "google_cloud_run_service" "batch_job" {
-  for_each = toset(["gradualexperiments", "suddenexperiments", "incrementalexperiments", "recurringexperiments", "test"])
-  
-  name     = "${each.key}-service"
+resource "google_cloud_run_v2_job" "test_experiments" {
+  name     = "test-job"
   location = var.region
-  project  = var.project_id
 
   template {
-    spec {
+    template {
       containers {
-        image = "${var.region}.pkg.dev/${var.project_id}/${var.docker_repo_name}/${each.key}:latest"
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/test:latest"
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "512Mi"
+          }
+        }
       }
-      service_account_name = google_service_account.cloud_run_sa.email
+      service_account = google_service_account.cloud_run_sa.email
     }
   }
+}
 
-  traffic {
-    percent         = 100
-    latest_revision = true
+resource "google_cloud_run_v2_job" "sudden_experiments" {
+  name     = "sudden-job"
+  location = var.region
+
+  template {
+    template {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/suddenexperiments:latest"
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "512Mi"
+          }
+        }
+      }
+      service_account = google_service_account.cloud_run_sa.email
+    }
   }
 }
+resource "google_cloud_run_v2_job" "recurring_experiments" {
+  name     = "recurring-job"
+  location = var.region
+
+  template {
+    template {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/recurringexperiments:latest"
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "512Mi"
+          }
+        }
+      }
+      service_account = google_service_account.cloud_run_sa.email
+    }
+  }
+}
+
+resource "google_cloud_run_v2_job" "gradual_experiments" {
+  name     = "gradual-job"
+  location = var.region
+
+  template {
+    template {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/gradualexperiments:latest"
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "512Mi"
+          }
+        }
+      }
+      service_account = google_service_account.cloud_run_sa.email
+    }
+  }
+}
+
+resource "google_cloud_run_v2_job" "incremental_experiments" {
+  name     = "incremental-job"
+  location = var.region
+
+  template {
+    template {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/incrementalexperiments:latest"
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "512Mi"
+          }
+        }
+      }
+      service_account = google_service_account.cloud_run_sa.email
+    }
+  }
+}
+
+
 
 resource "google_artifact_registry_repository_iam_binding" "repo_writer" {
   location      = var.region

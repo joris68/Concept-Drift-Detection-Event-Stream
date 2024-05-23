@@ -6,8 +6,6 @@ __pycache__
 .env
 .venv
 venv
-playGround
 staticAnalysis
 tests
-Data/real-world
 Experiments
