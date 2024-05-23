@@ -2,6 +2,7 @@ from google.cloud import storage
 
 def upload_blob(bucket_name, source_file_name, destination_blob_name):
     try:
+        print(f"this is the source file name {source_file_name}")
         # Create a Cloud Storage client
         storage_client = storage.Client()
         # Get the bucket
