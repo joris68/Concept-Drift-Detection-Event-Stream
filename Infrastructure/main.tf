@@ -167,6 +167,68 @@ resource "google_cloud_run_v2_job" "incremental_experiments" {
     }
   }
 }
+###################################################################
+# Jobs for real world Data
+
+resource "google_cloud_run_v2_job" "traffic_job" {
+  name     = "traffic-job"
+  location = var.region
+
+  template {
+    template {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/traffic:latest"
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "512Mi"
+          }
+        }
+      }
+      service_account = google_service_account.cloud_run_sa.email
+    }
+  }
+}
+
+resource "google_cloud_run_v2_job" "hospital_job" {
+  name     = "hospital-job"
+  location = var.region
+
+  template {
+    template {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/hospital:latest"
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "512Mi"
+          }
+        }
+      }
+      service_account = google_service_account.cloud_run_sa.email
+    }
+  }
+}
+
+resource "google_cloud_run_v2_job" "challenge_job" {
+  name     = "challenge-job"
+  location = var.region
+
+  template {
+    template {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/challenge:latest"
+        resources {
+          limits = {
+            cpu    = "1"
+            memory = "512Mi"
+          }
+        }
+      }
+      service_account = google_service_account.cloud_run_sa.email
+    }
+  }
+}
 
 resource "google_storage_bucket_iam_binding" "new_bucket_writer" {
   bucket = google_storage_bucket.my_bucket.name
