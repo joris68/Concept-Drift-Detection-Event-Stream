@@ -4,6 +4,7 @@ from ProcessHistory import ProcessHistory
 from pybeamline.sources import log_source
 import time
 import csv
+from storage_Handler import upload_blob
 
 def gradual_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, cohens_boundary, model_epsilon):
     #logging.basicConfig(filename="logs/logs_gradual.log", encoding="utf-8", level=logging.DEBUG)
@@ -50,3 +51,4 @@ if __name__ == "__main__":
                     finally:
                         file.close()
 
+    upload_blob("experiments-bucket68", 'ExperimentsDocker/gradual_100.csv', 'gradual_100.csv')

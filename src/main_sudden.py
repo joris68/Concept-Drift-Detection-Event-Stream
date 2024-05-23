@@ -5,6 +5,7 @@ from ProcessHistory import ProcessHistory
 from pybeamline.sources import log_source
 import time
 import csv
+from storage_Handler import upload_blob
 
 
 
@@ -22,8 +23,6 @@ if __name__ == "__main__":
     trace_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]  
     anomaly_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] 
 
-
-    #with open('ExperimentsDocker/sudden_100.csv', 'w', newline='') as file:
     try:
         file = open('ExperimentsDocker/sudden_100.csv', 'w',  newline='')
         writer = csv.writer(file)
@@ -32,7 +31,7 @@ if __name__ == "__main__":
         print("file error occured")
     finally:
         file.close()
-        
+
     dataset = "sudden_100"
 
     trace_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]  
@@ -54,3 +53,5 @@ if __name__ == "__main__":
                         print("Error in the forloop")
                     finally:
                         file.close()
+
+    upload_blob("experiments-bucket68", 'ExperimentsDocker/sudden_100.csv', 'sudden_100.csv')

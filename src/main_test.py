@@ -1,19 +1,6 @@
 from google.cloud import storage
+from storage_Handler import upload_blob
 
 if __name__ == "__main__":
 
-     bucket_name = "experiments-bucket68"
-     file_name = "example.txt"
-     content = "Hello, World!"
-
-     for i in range(0, 1000):
-          print(f"Hello world the {i}th")
-
-     storage_client = storage.Client()
-
-     # Get the bucket.
-     bucket = storage_client.bucket(bucket_name)
-
-     # Create a new blob and upload the file's content.
-     blob = bucket.blob("my-first-blob")
-     blob.upload_from_string(content)     
+     upload_blob("experiments-bucket68", 'staticAnalysis/ExecutionTimes/gradual.csv', 'gradual.csv')

@@ -32,12 +32,7 @@ provider "google" {
 ##  filename = "cloudbuild.yaml"  // The name of your Cloud Build config file
 #}
 
-# the service accounts for cloud build batch jobs
-resource "google_service_account" "cloud_run_sa" {
-  account_id   = "cloud-run-batch-job-sa"
-  display_name = "Service Account for Cloud Run Batch Jobs"
-  project      = var.project_id
-}
+
 
 
 
@@ -66,13 +61,13 @@ resource "google_service_account" "cloud_run_sa" {
   project      = var.project_id
 }
 
-resource "google_storage_bucket_iam_member" "bucket_writer" {
-  bucket = google_storage_bucket.my_bucket.name
-  role   = "roles/storage.objectCreator"
+#resource "google_storage_bucket_iam_member" "bucket_writer" {#
+ # bucket = google_storage_bucket.my_bucket.name
+ # role   = "roles/storage.objectCreator"
 
-  member = "serviceAccount:${google_service_account.cloud_run_sa.email}"
+ # member = "serviceAccount:${google_service_account.cloud_run_sa.email}"
   
-}
+#}
 
 resource "google_cloud_run_v2_job" "test_experiments" {
   name     = "test-job"
@@ -173,7 +168,12 @@ resource "google_cloud_run_v2_job" "incremental_experiments" {
   }
 }
 
+resource "google_storage_bucket_iam_binding" "new_bucket_writer" {
+  bucket = google_storage_bucket.my_bucket.name
+  role   = "roles/storage.objectCreator"
 
+  members = ["serviceAccount:${google_service_account.cloud_run_sa.email}"]
+}
 
 resource "google_artifact_registry_repository_iam_binding" "repo_writer" {
   location      = var.region

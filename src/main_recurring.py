@@ -4,6 +4,7 @@ from ProcessHistory import ProcessHistory
 from pybeamline.sources import log_source
 import time
 import csv
+from storage_Handler import upload_blob
 
 
 
@@ -51,3 +52,5 @@ if __name__ == "__main__":
                         print("Error in the forloop")
                     finally:
                         file.close()
+    
+    upload_blob("experiments-bucket68", 'ExperimentsDocker/recurring_100.csv' , 'recurring_100.csv')

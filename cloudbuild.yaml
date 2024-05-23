@@ -27,9 +27,27 @@ steps:
     args: ['build', '-f', 'dockerfile.test', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/test:latest', '.']
     id: 'Build Test'
 
+#############################################################################################################
+# Real World Images
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'dockerfile.challenge', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/challenge:latest', '.']
+    id: 'Build challenge'
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'dockerfile.hospital', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/hospital:latest', '.']
+    id: 'Build Hospital'
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'dockerfile.traffic', '-t', 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/traffic:latest', '.']
+    id: 'Build Traffic'
+
+
 images:
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/gradualexperiments:latest'
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/suddenexperiments:latest'
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/incrementalexperiments:latest'
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/recurringexperiments:latest'
   - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/test:latest'
+  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/challenge:latest'
+  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/hospital:latest'
+  - 'europe-west1-docker.pkg.dev/bachelorthesis-421507/mythesisimages/traffic:latest'
