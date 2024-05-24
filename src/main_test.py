@@ -27,8 +27,8 @@ if __name__ == "__main__":
           with open('./ExperimentsDocker/sudden_100.csv', 'x', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["Experiment", "Dataset", "Deviation", "Trace Threshold", "Lower Boundary", "Anomaly Threshold", "Cohens Boundary", "Model Epsilon", "Drifts detected", "at event", "exe time", "cohens score"])
-     except:
-        print("file error occurred at the beginning")
+     except Exception as e:
+        print(f"file error occurred at the beginning {e}")
 
      dataset = "sudden_100"
 
