@@ -24,7 +24,7 @@ if __name__ == "__main__":
     anomaly_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] 
 
     try:
-        file = open('ExperimentsDocker/sudden_100.csv', 'w',  newline='')
+        file = open('./ExperimentsDocker/sudden_100.csv', 'w',  newline='')
         writer = csv.writer(file)
         writer.writerow(["Experiment",  "Dataset", "Deviation", "Trace Threshold",  "Lower Boundary", "Anomaly Threshold" ,"Cohens Boundary", "Model Epsilon",  "Drifts detected", "at event", "exe time", "cohens score"])
     except:
@@ -45,7 +45,7 @@ if __name__ == "__main__":
                     PH_length, drift_history, cohens_history = sudden_100(allowed_deviation=2.0, trace_treshold=trace_threshold, lower_boundary=220, anomaly_treshold=anomaly_threshold, cohens_boundary=13, model_epsilon=0.2)
                     execution_time = time.time() - start_time
                     try:
-                        file = open('ExperimentsDocker/sudden_100.csv', 'a',  newline='')
+                        file = open('./ExperimentsDocker/sudden_100.csv', 'a',  newline='')
                         writer = csv.writer(file)
                         for x in range(min(len(drift_history), len(cohens_history))):
                             writer.writerow([counter_1, dataset, 2.0, trace_threshold, 220, anomaly_threshold, 13, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])

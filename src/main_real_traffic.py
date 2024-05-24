@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
 
         try:
-            file = open('ExperimentsDocker/traffic.csv', 'w',  newline='')
+            file = open('./ExperimentsDocker/traffic.csv', 'w',  newline='')
             writer = csv.writer(file)
             writer.writerow(["Experiment",  "Dataset", "Deviation", "Trace Threshold",  "Lower Boundary", "Anomaly Threshold" ,"Cohens Boundary", "Model Epsilon",  "Drifts detected", "at event", "exe time", "cohens score", "size"])
         except:
@@ -41,7 +41,7 @@ if __name__ == "__main__":
                     execution_time = time.time() - start_time
 
                     try:
-                        file = open('ExperimentsDocker/traffic.csv', 'a',  newline='')
+                        file = open('./ExperimentsDocker/traffic.csv', 'a',  newline='')
                         for x in range(min(len(drift_history), len(cohens_history))):
                             writer.writerow([1, dataset, 1.0, 0.7, 2500, 0.7, 13, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]], size)
 

@@ -19,7 +19,7 @@ def offer(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, c
 if __name__ == "__main__":
 
         try:
-            file = open('ExperimentsDocker/challenge.csv', 'w',  newline='')
+            file = open('./ExperimentsDocker/challenge.csv', 'w',  newline='')
             writer = csv.writer(file)
             writer.writerow(["Experiment",  "Dataset", "Deviation", "Trace Threshold",  "Lower Boundary", "Anomaly Threshold" ,"Cohens Boundary", "Model Epsilon",  "Drifts detected", "at event", "exe time", "cohens score", "size"])
         except:
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 PH_length, drift_history, cohens_history = offer(allowed_deviation=1.0, trace_treshold=0.7, lower_boundary=2500, anomaly_treshold=0.7, cohens_boundary=13, model_epsilon=0.2, size=size)
                 execution_time = time.time() - start_time
                 try:
-                    file = open('ExperimentsDocker/challenge.csv', 'a',  newline='')
+                    file = open('./ExperimentsDocker/challenge.csv', 'a',  newline='')
                     for x in range(min(len(drift_history), len(cohens_history))):
                         writer.writerow([1, dataset, 1.0, 0.7, 2500, 0.7, 13, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]], size)
                 except:
