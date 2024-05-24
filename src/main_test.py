@@ -24,7 +24,7 @@ if __name__ == "__main__":
      anomaly_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] 
 
      try:
-          with open('./ExperimentsDocker/sudden_100.csv', 'w', newline='') as file:
+          with open('./ExperimentsDocker/sudden_100.csv', 'x', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["Experiment", "Dataset", "Deviation", "Trace Threshold", "Lower Boundary", "Anomaly Threshold", "Cohens Boundary", "Model Epsilon", "Drifts detected", "at event", "exe time", "cohens score"])
      except:
