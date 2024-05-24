@@ -22,13 +22,11 @@ if __name__ == "__main__":
 
 
     try:
-        file = open('./ExperimentsDocker/incremental_100.csv', 'w',  newline='')
-        writer = csv.writer(file)
-        writer.writerow(["Experiment",  "Dataset", "Deviation", "Trace Threshold",  "Lower Boundary", "Anomaly Threshold" ,"Cohens Boundary", "Model Epsilon",  "Drifts detected", "at event", "exe time", "cohens score"])
+        with open('./ExperimentsDocker/incremental_100.csv', 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Experiment", "Dataset", "Deviation", "Trace Threshold", "Lower Boundary", "Anomaly Threshold", "Cohens Boundary", "Model Epsilon", "Drifts detected", "at event", "exe time", "cohens score"])
     except:
-        print("file error occured")
-    finally:
-        file.close()
+        print("file error occurred at the beginning")
     
 
     dataset = "incremental_100"
@@ -44,13 +42,11 @@ if __name__ == "__main__":
                     PH_length, drift_history, cohens_history = incremental_100(allowed_deviation=dev, trace_treshold=0.6, lower_boundary=220, anomaly_treshold=0.7, cohens_boundary=cohen, model_epsilon=0.2)
                     execution_time = time.time() - start_time
                     try:
-                        file = open('./ExperimentsDocker/incremental_100.csv', 'w',  newline='')
-                        writer = csv.writer(file)
-                        for x in range(min(len(drift_history), len(cohens_history))):
-                            writer.writerow([counter_1, dataset, dev, 0.6, 220, 0.7, cohen, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])
+                        with open('./ExperimentsDocker/incremental_100.csv', 'w',  newline='') as file:
+                            writer = csv.writer(file)
+                            for x in range(min(len(drift_history), len(cohens_history))):
+                                writer.writerow([counter_1, dataset, dev, 0.6, 220, 0.7, cohen, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])
                     except:
                         print("Error in the forloop")
-                    finally:
-                        file.close()
 
     upload_blob("experiments-bucket68", './ExperimentsDocker/incremental_100.csv', 'incremental_100.csv')
