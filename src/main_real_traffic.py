@@ -49,4 +49,4 @@ if __name__ == "__main__":
                           print("Error occured in for loop")
                     finally:
                           file.close()
-        upload_blob("experiments-bucket68", 'ExperimentsDocker/traffic.csv', 'traffic.csv')
+        upload_blob("experiments-bucket68", './ExperimentsDocker/traffic.csv', 'traffic.csv')

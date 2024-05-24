@@ -53,4 +53,4 @@ if __name__ == "__main__":
                     finally:
                         file.close()
     
-    upload_blob("experiments-bucket68", 'ExperimentsDocker/recurring_100.csv' , 'recurring_100.csv')
+    upload_blob("experiments-bucket68", './ExperimentsDocker/recurring_100.csv' , 'recurring_100.csv')
