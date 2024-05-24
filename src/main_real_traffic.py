@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
 
         try:
-            with open('./ExperimentsDocker/traffic.csv', 'w',  newline='') as file:
+            with open('./ExperimentsDocker/traffic.csv', 'x',  newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow(["Experiment",  "Dataset", "Deviation", "Trace Threshold",  "Lower Boundary", "Anomaly Threshold" ,"Cohens Boundary", "Model Epsilon",  "Drifts detected", "at event", "exe time", "cohens score", "size"])
         except:

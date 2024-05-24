@@ -19,7 +19,7 @@ def offer(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, c
 
 if __name__ == "__main__":
         try:
-            with open('./ExperimentsDocker/hospital.csv', 'w',  newline='') as file:
+            with open('./ExperimentsDocker/hospital.csv', 'x',  newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow(["Experiment",  "Dataset", "Deviation", "Trace Threshold",  "Lower Boundary", "Anomaly Threshold" ,"Cohens Boundary", "Model Epsilon",  "Drifts detected", "at event", "exe time", "cohens score", "size"])
         except:
