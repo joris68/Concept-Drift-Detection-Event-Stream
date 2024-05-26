@@ -4,7 +4,8 @@ import statistics as s
 
 #actual drift point gradual: 540
 
-# all drifts before
+# if the first lie of each group is >= 540 and DriftType.Sudden ==> TP else ==> 
+
 
 def calc_accracy():
     file_path = 'ExperimentsDocker/sudden_100.csv'

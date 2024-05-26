@@ -21,10 +21,16 @@ def sudden_100(allowed_deviation, trace_treshold, lower_boundary, anomaly_tresho
 
 if __name__ == "__main__":
 
-     download_blob("experiments-data-bucket", "BPI Challenge 2017.xes", "./DataImported/BPI Challenge 2017.xes")
+     download_blob("experiments-data-bucket68", "BPI Challenge 2017.xes", "./DataImported/BPI Challenge 2017.xes")
 
      if os.path.exists("./DataImported/BPI Challenge 2017.xes"):
-          print("Everything went successfull")
+          try:
+            # Attempt to open the file
+            with open("./DataImported/BPI Challenge 2017.xes", 'r') as file:
+                print(f"File '{"./DataImported/BPI Challenge 2017.xes"}' exists and can be opened.")
+          except IOError as e:
+            # Handle the error if the file can't be opened
+            print(f"File '{"./DataImported/BPI Challenge 2017.xes"}' exists but cannot be opened: {e}")
      else:
           print("No the file does not exist")
      
