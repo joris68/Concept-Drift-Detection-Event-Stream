@@ -4,20 +4,19 @@ import statistics as s
 
 #actual drift point gradual: 540
 
-def calc_accracy(weglassen: bool):
-    file_path = 'New/gradual_100.csv'
+# all drifts before
+
+def calc_accracy():
+    file_path = 'ExperimentsDocker/sudden_100.csv'
     df = pd.read_csv(file_path)
     confusion_matrices = {}
 
     for (experiment, trace_threshold, anomaly_threshold), group in df.groupby(['Experiment','Trace Threshold', 'Anomaly Threshold']):
-        if weglassen and trace_threshold == 0.8 and anomaly_threshold == 0.5:
-               continue
         tp = group['Drifts detected'].eq('DriftType.SUDDEN').sum()
         # FN is calculated based on the provided criteria. If there's more than one row, it indicates potential FNs due to multiple entries or non-SUDDEN types.
         fn = len(group) - tp
         
         confusion_matrices[(experiment, trace_threshold, anomaly_threshold)] = {'TP': tp, 'FN': fn}
-
 
 
     #print(confusion_matrices)

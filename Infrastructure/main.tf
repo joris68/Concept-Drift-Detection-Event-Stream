@@ -54,6 +54,14 @@ resource "google_storage_bucket" "my_bucket" {
   storage_class = "STANDARD"
 }
 
+resource "google_storage_bucket" "my_data_bucket" {
+  name          = "experiments-data-bucket68"
+  location      = var.region
+  force_destroy = true  # Enables deleting bucket with contents in it
+
+  storage_class = "STANDARD"
+}
+
 # the service accounts for cloud build batch jobs
 resource "google_service_account" "cloud_run_sa" {
   account_id   = "cloud-run-batch-job-sa"
@@ -75,6 +83,7 @@ resource "google_cloud_run_v2_job" "test_experiments" {
 
   template {
     template {
+      timeout = "82500s"
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/test:latest"
         resources {
@@ -95,6 +104,7 @@ resource "google_cloud_run_v2_job" "sudden_experiments" {
 
   template {
     template {
+      timeout = "82500s"
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/suddenexperiments:latest"
         resources {
@@ -114,6 +124,7 @@ resource "google_cloud_run_v2_job" "recurring_experiments" {
 
   template {
     template {
+      timeout = "82500s"
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/recurringexperiments:latest"
         resources {
@@ -134,6 +145,7 @@ resource "google_cloud_run_v2_job" "gradual_experiments" {
 
   template {
     template {
+      timeout = "82500s"
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/gradualexperiments:latest"
         resources {
@@ -154,6 +166,7 @@ resource "google_cloud_run_v2_job" "incremental_experiments" {
 
   template {
     template {
+      timeout = "82500s"
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/incrementalexperiments:latest"
         resources {
@@ -176,6 +189,7 @@ resource "google_cloud_run_v2_job" "traffic_job" {
 
   template {
     template {
+      timeout = "82500s"
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/traffic:latest"
         resources {
@@ -196,6 +210,7 @@ resource "google_cloud_run_v2_job" "hospital_job" {
 
   template {
     template {
+      timeout = "82500s"
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/hospital:latest"
         resources {
@@ -216,6 +231,7 @@ resource "google_cloud_run_v2_job" "challenge_job" {
 
   template {
     template {
+      timeout = "82500s"
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/challenge:latest"
         resources {
@@ -232,6 +248,13 @@ resource "google_cloud_run_v2_job" "challenge_job" {
 
 resource "google_storage_bucket_iam_binding" "new_bucket_writer" {
   bucket = google_storage_bucket.my_bucket.name
+  role   = "roles/storage.objectCreator"
+
+  members = ["serviceAccount:${google_service_account.cloud_run_sa.email}"]
+}
+
+resource "google_storage_bucket_iam_binding" "new_bucket_data_writer" {
+  bucket = google_storage_bucket.my_data_bucket.name
   role   = "roles/storage.objectCreator"
 
   members = ["serviceAccount:${google_service_account.cloud_run_sa.email}"]
