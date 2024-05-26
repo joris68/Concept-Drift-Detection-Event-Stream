@@ -6,8 +6,8 @@ import statistics as s
 # second point 697
 
 
-def calc_accuracy(weglassen: bool):
-     file_path = 'New/recurring_100.csv'
+def calc_accuracy():
+     file_path = 'ExperimentsDocker/recurring_100.csv'
      df = pd.read_csv(file_path)
      confusion_matrices = {}
 
@@ -15,64 +15,53 @@ def calc_accuracy(weglassen: bool):
 
      for (experiment, trace_threshold, anomaly_threshold), group in df.groupby([ "Experiment",'Trace Threshold', 'Anomaly Threshold']):
 
+        FN = 0
+        TP = 0
+        FP = 0
+        lenght_group = len(group)
+        if lenght_group == 0:
+            FN = 1
+            TP = 0
+            FP = 0
+        else:
 
-    
-          sorted_group = group.sort_values(by='Drifts detected')
-          tp = 0
-          fn = 0
-     # Check first condition
-          if sorted_group.iloc[0]['Drifts detected'] == 'DriftType.SUDDEN':
-               tp += 1
-          else:
-               fn += 1
-     
-     # Check second condition if there's a second row
-          if len(sorted_group) > 1 and sorted_group.iloc[1]['Drifts detected'] == 'DriftType.SUDDEN_RECURRING':
-               tp += 1
-          elif len(sorted_group) > 1:
-               fn += 1
+            for index, row in group.iterrows():
+                if row["Drifts detected"] == "DriftType.SUDDEN" and row["at event"] >= 540 and TP == 0:
+                    TP += 1
+                elif row["Drifts detected"] == "DriftType.SUDDEN_RECURRING" and row["at event"] >= 697 and TP == 1: 
+                    TP +=1
+                else:
+                    FP += 1
+                
+        confusion_matrices[(experiment, trace_threshold, anomaly_threshold)] = {'TP': TP, 'FP': FP, 'FN': FN}
 
-          # in the case the first got not 
-          # Count remaining rows as FN
-          fn += len(sorted_group) - 2
-     
-          confusion_matrices[(experiment, trace_threshold, anomaly_threshold)] = {'TP': tp, 'FN': fn}
-     
      aggregated_data = {}
      for key, value in confusion_matrices.items():
         trace, anomaly = key[1], key[2]
-        ttuple= (trace, anomaly)  # The experiment identifier is the first element of the tuple
+        ttuple= (trace, anomaly)  
         if ttuple not in aggregated_data:
-            aggregated_data[ttuple] = {'TP': 0, 'FN': 0}
+            aggregated_data[ttuple] = {'TP': 0, 'FP': 0, 'FN': 0}
         aggregated_data[ttuple]['TP'] += value['TP']
+        aggregated_data[ttuple]['FP'] += value['FP']
         aggregated_data[ttuple]['FN'] += value['FN']
 
      return aggregated_data
 
 
-     #total_tp = sum(cm['TP'] for cm in confusion_matrices.values())
-     #total_fn = sum(cm['FN'] for cm in confusion_matrices.values())
 
-     #print(total_tp)
-     #print(total_fn)
+dict = calc_accuracy()
 
-     #accuracy = total_tp / (total_tp + total_fn)
-     #print(accuracy)
-
-dict = calc_accuracy(weglassen=False)
-print(len(dict.items()))
 
 def to_matrix(numbers_dict):
     accuracy_dict = {}
 
     for key, values in numbers_dict.items():
         if (values['TP'] + values['FN']) > 0:  
-            accuracy = values['TP'] / (values['TP'] + values['FN'])
+            accuracy = values['TP'] / (values['TP'] + values['FP'] + values['FN'])
         else:
             accuracy = 0 
         accuracy_dict[key] = accuracy
     print(accuracy_dict)
-    print(len(accuracy_dict.items()))
 
 to_matrix(dict)
 

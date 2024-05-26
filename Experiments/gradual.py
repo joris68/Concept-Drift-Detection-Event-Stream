@@ -4,7 +4,7 @@ import statistics as s
 
 # actual drift point: 540
 
-def count_drifts(weglassen: bool):
+def count_drifts():
      file_path = 'ExperimentsDocker/gradual_100.csv'
      df = pd.read_csv(file_path)
      incremental = 0
@@ -27,7 +27,7 @@ def count_drifts(weglassen: bool):
 
 #count_drifts(True)
 
-def calc_accracy(weglassen: bool):
+def calc_accracy():
     file_path = 'New/gradual_100.csv'
     df = pd.read_csv(file_path)
     confusion_matrices = {}

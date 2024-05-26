@@ -44,8 +44,11 @@ if __name__ == "__main__":
                     try:
                         with open('./ExperimentsDocker/incremental_100.csv', 'w',  newline='') as file:
                             writer = csv.writer(file)
-                            for x in range(min(len(drift_history), len(cohens_history))):
-                                writer.writerow([counter_1, dataset, dev, 0.6, 220, 0.7, cohen, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])
+                            if len(drift_history) == 0:
+                                writer.writerow([counter_1, dataset, dev, 0.6, 220, 0.7, cohen, 0.2, "NO DRIFT", 0, execution_time, cohens_history[x]])
+                            else:
+                                for x in range(min(len(drift_history), len(cohens_history))):
+                                    writer.writerow([counter_1, dataset, dev, 0.6, 220, 0.7, cohen, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])
                     except:
                         print("Error in the forloop")
 
