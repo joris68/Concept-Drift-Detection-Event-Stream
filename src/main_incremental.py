@@ -49,7 +49,9 @@ if __name__ == "__main__":
                             else:
                                 for x in range(min(len(drift_history), len(cohens_history))):
                                     writer.writerow([counter_1, dataset, dev, 0.6, 220, 0.7, cohen, 0.2, drift_history[x][0], drift_history[x][1], execution_time, cohens_history[x]])
+
+                        print("####### wrote some lines")           
                     except:
                         print("Error in the forloop")
 
-    upload_blob("experiments-bucket68", './ExperimentsDocker/incremental_100.csv', 'incremental_100.csv')
+    #upload_blob("experiments-bucket68", './ExperimentsDocker/incremental_100.csv', 'incremental_100.csv')
