@@ -42,7 +42,7 @@ if __name__ == "__main__":
                     PH_length, drift_history, cohens_history = incremental_100(allowed_deviation=dev, trace_treshold=0.6, lower_boundary=220, anomaly_treshold=0.7, cohens_boundary=cohen, model_epsilon=0.2)
                     execution_time = time.time() - start_time
                     try:
-                        with open('./ExperimentsDocker/incremental_100.csv', 'w',  newline='') as file:
+                        with open('./ExperimentsDocker/incremental_100.csv', 'a',  newline='') as file:
                             writer = csv.writer(file)
                             if len(drift_history) == 0:
                                 writer.writerow([counter_1, dataset, dev, 0.6, 220, 0.7, cohen, 0.2, "NO DRIFT", 0, execution_time, cohens_history[x]])
