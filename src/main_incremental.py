@@ -54,4 +54,6 @@ if __name__ == "__main__":
                     except:
                         print("Error in the forloop")
 
-    #upload_blob("experiments-bucket68", './ExperimentsDocker/incremental_100.csv', 'incremental_100.csv')
+
+
+    upload_blob("experiments-bucket68", './ExperimentsDocker/incremental_100.csv', 'incremental_100.csv')
