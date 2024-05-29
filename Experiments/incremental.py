@@ -31,6 +31,17 @@ def calc_accuracy():
 
     return numbers_and_drifts
 
+def get_average_cohens():
+    file_path = 'ExperimentsDocker/incremental_100.csv'
+    df = pd.read_csv(file_path)
+    df_one_experiment = df[df["Experiment"]== 0]
+    for x in [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2]:
+        df_dev = df_one_experiment[df_one_experiment["Deviation"]== x]
+        avg = df_dev["cohens score"].mean()
+        print(f"{x}: {avg}")
+
+get_average_cohens()
+
 # I want the number of drifts for different type of deviations, no matter which
 def count_rows_per_group():
     file_path = 'ExperimentsDocker/incremental_100.csv'

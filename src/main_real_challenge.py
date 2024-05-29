@@ -18,7 +18,7 @@ def offer(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, c
 
 if __name__ == "__main__":
         
-        download_blob("experiments-data-bucket", "BPI Challenge 2017.xes", "./DataImported/BPI Challenge 2017.xes")
+        download_blob("experiments-data-bucket68", "BPI Challenge 2017.xes", "./DataImported/BPI Challenge 2017.xes")
 
         try:
             with open('./ExperimentsDocker/challenge.csv', 'x',  newline='') as file:

@@ -1,5 +1,6 @@
 import pandas as pd
 import statistics as s
+import matplotlib.pyplot as plt
 # actual drift point: 540
 
 #actual drift point gradual: 540
@@ -9,6 +10,44 @@ import statistics as s
 # missed wäre wenn wir keinen drift detected haben also die Group keine Einträhehat ==> len(group) == 0
 
 # drifts davor 540 und nach dem ersten drift sind FP (Overestimations)
+
+# incorporate only the true positives
+def calc_latency():
+    file_path = 'ExperimentsDocker/gradual_100.csv'
+    df = pd.read_csv(file_path)
+    tuple_list = []
+    #filter out the true postives and save (MS and event)
+    for (experiment, trace_threshold, anomaly_threshold), group in df.groupby(['Experiment','Trace Threshold', 'Anomaly Threshold']):
+        for index, row in group.iterrows():
+                counter = 0
+                if row["Drifts detected"] == "DriftType.SUDDEN" and row["at event"] >= 540 and counter == 0:
+                    tuple_list.append((row["Anomaly Threshold"], row["at event"]))
+                    break
+                
+                counter += 1
+    print(tuple_list)
+    return tuple_list
+    #print(tuple_list)
+
+list = calc_latency()
+
+def corr_from_tuple_list(tuple_list):
+
+    df = pd.DataFrame(tuple_list, columns=['MS', 'event'])
+    df['event'] = df['event'] - 540
+    corr = df["MS"].corr(df["event"])
+    print(corr)
+    plt.scatter(df["MS"], df["event"], color='purple')
+
+    # Adding title and labels
+    #plt.title('')
+    plt.xlabel('Model Score')
+    plt.ylabel('Latency Lag')
+
+    # Show the plot
+    plt.show()
+
+corr_from_tuple_list(list)
 
 def calc_accuracy():
     file_path = 'ExperimentsDocker/gradual_100.csv'
@@ -50,7 +89,7 @@ def calc_accuracy():
     return aggregated_data
     
 
-dict = calc_accuracy()
+#dict = calc_accuracy()
 #print(dict)
 #print(len(dict))
 
@@ -65,7 +104,7 @@ def to_matrix(numbers_dict):
         accuracy_dict[key] = accuracy
     print(accuracy_dict)
           
-to_matrix(dict)     
+#to_matrix(dict)     
 
 def calc_average_detection_delay(weglassen: bool):
 

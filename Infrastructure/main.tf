@@ -195,7 +195,7 @@ resource "google_cloud_run_v2_job" "traffic_job" {
         resources {
           limits = {
             cpu    = "1"
-            memory = "512Mi"
+            memory = "2048Mi"
           }
         }
       }
@@ -216,7 +216,7 @@ resource "google_cloud_run_v2_job" "hospital_job" {
         resources {
           limits = {
             cpu    = "1"
-            memory = "512Mi"
+            memory = "2048Mi"
           }
         }
       }
@@ -237,7 +237,7 @@ resource "google_cloud_run_v2_job" "challenge_job" {
         resources {
           limits = {
             cpu    = "1"
-            memory = "512Mi"
+            memory = "2048Mi"
           }
         }
       }
@@ -257,6 +257,11 @@ resource "google_storage_bucket_iam_binding" "new_bucket_data_writer" {
   bucket = google_storage_bucket.my_data_bucket.name
   role   = "roles/storage.objectCreator"
 
+  members = ["serviceAccount:${google_service_account.cloud_run_sa.email}"]
+}
+resource "google_storage_bucket_iam_binding" "new_bucket_data_getter" {
+  bucket = google_storage_bucket.my_data_bucket.name
+  role   = "roles/storage.objectViewer"
   members = ["serviceAccount:${google_service_account.cloud_run_sa.email}"]
 }
 
