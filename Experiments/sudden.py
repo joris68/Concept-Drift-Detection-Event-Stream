@@ -18,8 +18,8 @@ def calc_latency():
     tuple_list = []
     #filter out the true postives and save (MS and event)
     for (experiment, trace_threshold, anomaly_threshold), group in df.groupby(['Experiment','Trace Threshold', 'Anomaly Threshold']):
+        counter = 0
         for index, row in group.iterrows():
-                counter = 0
                 if row["Drifts detected"] == "DriftType.SUDDEN" and row["at event"] >= 540 and counter == 0:
                     tuple_list.append((row["Anomaly Threshold"], row["at event"]))
                     break

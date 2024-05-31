@@ -194,8 +194,8 @@ resource "google_cloud_run_v2_job" "traffic_job" {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/traffic:latest"
         resources {
           limits = {
-            cpu    = "1"
-            memory = "2048Mi"
+            cpu    = "2"
+            memory = "4096Mi"
           }
         }
       }
@@ -215,8 +215,8 @@ resource "google_cloud_run_v2_job" "hospital_job" {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/hospital:latest"
         resources {
           limits = {
-            cpu    = "1"
-            memory = "2048Mi"
+            cpu    = "2"
+            memory = "4096Mi"
           }
         }
       }
@@ -236,8 +236,8 @@ resource "google_cloud_run_v2_job" "challenge_job" {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.docker_repo_name}/challenge:latest"
         resources {
           limits = {
-            cpu    = "1"
-            memory = "2048Mi"
+            cpu    = "2"
+            memory = "4096Mi"
           }
         }
       }

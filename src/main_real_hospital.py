@@ -18,7 +18,7 @@ def offer(allowed_deviation, trace_treshold, lower_boundary, anomaly_treshold, c
 
 
 if __name__ == "__main__":
-        download_blob("experiments-data-bucket68", "Hospital_log.xes", "DataImported/hospital.xes"  )
+        download_blob("experiments-data-bucket68", "Hospital_log.xes", "DataImported/Hospital.xes"  )
         try:
             with open('./ExperimentsDocker/hospital.csv', 'x',  newline='') as file:
                 writer = csv.writer(file)
