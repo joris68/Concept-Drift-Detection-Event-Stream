@@ -48,6 +48,9 @@ Here's how to run the project in a Docker container:
 
 4. python src/Main.py
 
+## Google Cloud Platform
+This project uses the Gooogle Cloud Run Service for running the COntainer Instances. The Terraform Configuration is within the Infrastructure Folder.
+
 
 
 ## Contributing to the Project
