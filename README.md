@@ -49,7 +49,24 @@ Here's how to run the project in a Docker container:
 4. python src/Main.py
 
 ## Google Cloud Platform
-This project uses the Gooogle Cloud Run Service for running the COntainer Instances. The Terraform Configuration is within the Infrastructure Folder.
+This project uses the Gooogle Cloud Run Service for running the Container Instances. The Terraform Configuration is within the Infrastructure Folder.
+
+Prerequisites:
+- terraform installed
+- Google Cloud account and all necessary API enabled
+- Gcloud installed locally
+
+To Apply Infrastructure run:
+1. terraform init
+2. terrafrom plan
+3. terraform apply
+
+To build Images:
+This command build the images and pushe it to artifact registry.
+
+run: gcloud builds submit --config=cloudbuild.yaml
+
+
 
 
 
