@@ -29,7 +29,7 @@ def calc_latency():
     return tuple_list
     #print(tuple_list)
 
-list = calc_latency()
+#list = calc_latency()
 
 def corr_from_tuple_list(tuple_list):
 
@@ -47,7 +47,7 @@ def corr_from_tuple_list(tuple_list):
     # Show the plot
     plt.show()
 
-corr_from_tuple_list(list)
+#corr_from_tuple_list(list)
 
 def calc_accuracy():
     file_path = 'ExperimentsDocker/gradual_100.csv'

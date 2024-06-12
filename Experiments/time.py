@@ -36,7 +36,7 @@ def time_incremental():
 
 
 def time_gradual():
-     file_path = 'ExperimentsDocker/incremental_100.csv'
+     file_path = 'ExperimentsDocker/gradual_100.csv'
      df = pd.read_csv(file_path)
      avg_time = df["exe time"].mean()
      time_per_event = avg_time / event_gradual
